@@ -10,7 +10,6 @@ def get_system_info() -> dict:
             'machine': platform.machine(),
             'cpu': platform.processor(),
             'platform': platform.platform(),
-            # Add more fields as needed
         }
     except Exception as e:
         return {

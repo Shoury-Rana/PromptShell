@@ -3,7 +3,6 @@ import subprocess
 import shlex
 import getpass
 import sys
-import re
 import platform
 import questionary
 from typing import Tuple
@@ -43,10 +42,6 @@ class AITerminalAssistant:
             system_info = get_system_info()
         except Exception:
             system_info = "Unable to retrieve system information"
-        
-        desktop_env = os.environ.get('XDG_CURRENT_DESKTOP', 'Unknown')
-        if get_current_os() == "windows":
-            desktop_env = "Windows"
 
         self.command_executor.definition = f"""
         [ROLE] Shell Command Interpreter

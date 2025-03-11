@@ -1,6 +1,5 @@
 import os
 import platform
-# import re
 
 def format_text(fg, bg=None, inverted=False, bold=False):
     reset = "\033[0m"
