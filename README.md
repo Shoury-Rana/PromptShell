@@ -166,7 +166,7 @@ $ backup all .txt files in a folder named backup
 $ !mkdir backup && copy *.txt backup\
 
 # Ask questions by prefixing or suffixing your query with '?'
-$ What’s the command to list all hidden files? ?
+$ What’s the command to list all hidden files?
 
 # Configure or change the LLM provider
 $ --config
