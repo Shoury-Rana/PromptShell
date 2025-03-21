@@ -1,4 +1,9 @@
-<h1 align="center" style="font-size: 32px;">>_ PromptShell</h1>
+<h1 align="center" style="font-size: 32px;">
+  >_ PromptShell
+  <span style="font-size: 12px; margin-left: 4px;">
+    v0.1.1
+  </span>
+</h1>
 
 <p align="center" style="font-size: 18px;">The Intelligent Terminal | Context-Aware Natural Language Commands</p>
 
@@ -10,7 +15,7 @@
 
 <!-- ![Demo](assets/demo.gif) -->
 
----
+<!-- ---
 
 ## 📖 Table of Contents
 
@@ -22,7 +27,7 @@
 - [Development Status](#🚧-development-status)
 - [Contributing](#🤝-contributing)
 - [License](#📜-license)
-- [Contact & Support](#📧-contact--support)
+- [Contact & Support](#📧-contact--support) -->
 
 ---
 
