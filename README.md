@@ -1,8 +1,8 @@
 <h1 align="center" style="font-size: 32px;">
   >_ PromptShell
-  <span style="font-size: 12px; margin-left: 4px;">
-    v0.1.1
-  </span>
+  <sup>
+    <span style="font-size: 14px; color: #666;">v0.1.1</span>
+  </sup>
 </h1>
 
 <p align="center" style="font-size: 18px;">The Intelligent Terminal | Context-Aware Natural Language Commands</p>
