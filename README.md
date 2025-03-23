@@ -98,11 +98,15 @@ promptshell
 
 ```bash
 # Install Ollama for local LLM's
-$ curl -fsSL https://ollama.com/install.sh | sh
+$ curl -fsSL https://ollama.com/install.sh | sh   # Linux
+$ brew install ollama   # MacOS
+$ winget install Ollama.Ollama    # Windows (via Powershell Administrator)
+
+# Verify Installation
+$ ollama --version
 
 # Get base model
 $ ollama pull <model_name>
-
 ```
 
 ### First-Time Setup
@@ -151,7 +155,6 @@ Saved to C:\Users\username\AppData\Roaming\PromptShell\promptshell_config.conf  
 
 Active model: #[Selected-model]
 Configuration updated!
-
 ```
 
 ---
