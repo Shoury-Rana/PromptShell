@@ -13,6 +13,10 @@
   <img src="https://img.shields.io/badge/macOS-000000?style=flat&logo=apple&logoColor=white" height="25">
 </p>
 
+
+https://github.com/user-attachments/assets/c2ba7d09-83ea-4d10-a825-92c30f28c0bd
+
+
 <!-- ![Demo](assets/demo.gif) -->
 
 <!-- ---
@@ -250,9 +254,9 @@ This project is licensed under the Apache 2.0 License. See [LICENSE](./LICENSE) 
 
 ---
 
-## 📧 Contact & Support
+## 📧 Contact
 
-- **Author**: Kirti Rathi
+- Built by **Kirti Rathi**
 - **Email**: [kirtirathi282@gmail.com](mailto:kirtirathi282@gmail.com)
 
 ---
