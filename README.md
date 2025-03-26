@@ -13,11 +13,13 @@
   <img src="https://img.shields.io/badge/macOS-000000?style=flat&logo=apple&logoColor=white" height="25">
 </p>
 
+<a href="https://pepy.tech/project/promptshell/">
+  <img src="https://static.pepy.tech/badge/promptshell" height="20">
+</a>
+
 
 https://github.com/user-attachments/assets/c2ba7d09-83ea-4d10-a825-92c30f28c0bd
 
-
-<!-- ![Demo](assets/demo.gif) -->
 
 <!-- ---
 
