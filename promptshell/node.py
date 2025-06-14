@@ -58,7 +58,7 @@ user {input_text} """
         except Exception as e:
             return f"Error in processing: {str(e)}"
 
-    @spinner(spinner_type="dots", message=" [magenta]Waiting for API response...")
+    @spinner(spinner_type="random", message=" [magenta]Waiting for API response...")
     def _call_ollama(self, prompt: str) -> str:
         response = requests.post(
             'http://localhost:11434/api/generate',
@@ -77,7 +77,7 @@ user {input_text} """
         else:
             return f"Error in Ollama API call: {response.status_code} - {response.text}"
 
-    @spinner(spinner_type="dots", message=" [magenta]Waiting for API response...")
+    @spinner(spinner_type="random", message=" [magenta]Waiting for API response...")
     def _call_openai(self, prompt: str) -> str:
         api_key = self.config["OPENAI_API_KEY"]
         client = OpenAI(api_key=api_key)
@@ -87,7 +87,7 @@ user {input_text} """
         )
         return response.choices[0].message.content.strip()
 
-    @spinner(spinner_type="dots", message=" [magenta]Waiting for API response...")
+    @spinner(spinner_type="random", message=" [magenta]Waiting for API response...")
     def _call_anthropic(self, prompt: str) -> str:
         api_key = self.config["ANTHROPIC_API_KEY"]
         client = anthropic.Anthropic(api_key=api_key)
@@ -98,7 +98,7 @@ user {input_text} """
         )
         return response.content[0].text.strip()
 
-    @spinner(spinner_type="dots", message=" [magenta]Waiting for API response...")
+    @spinner(spinner_type="random", message=" [magenta]Waiting for API response...")
     def _call_google(self, prompt: str) -> str:
         api_key = self.config["GOOGLE_API_KEY"]
         genai.configure(api_key=api_key)
@@ -133,7 +133,7 @@ user {input_text} """
         response_json = json.loads(response.choices[0].message.content.strip())
         return response_json["command"].strip()
 
-    @spinner(spinner_type="dots", message=" [magenta]Waiting for API response...")
+    @spinner(spinner_type="random", message=" [magenta]Waiting for API response...")
     def _call_fireworks(self, prompt: str) -> str:
         """Handle API calls for Fireworks AI provider"""
         api_key = self.config["FIREWORKS_API_KEY"]
@@ -148,7 +148,7 @@ user {input_text} """
         )
         return response.choices[0].message.content.strip()
 
-    @spinner(spinner_type="dots", message=" [magenta]Waiting for API response...")
+    @spinner(spinner_type="random", message=" [magenta]Waiting for API response...")
     def _call_openrouter(self, prompt: str) -> str:
         """Handle API calls for OpenRouter provider"""
         api_key = self.config["OPENROUTER_API_KEY"]
@@ -167,7 +167,7 @@ user {input_text} """
         )
         return response.choices[0].message.content.strip()
 
-    @spinner(spinner_type="dots", message=" [magenta]Waiting for API response...")
+    @spinner(spinner_type="random", message=" [magenta]Waiting for API response...")
     def _call_deepseek(self, prompt: str) -> str:
         """Handle API calls for DeepSeek provider"""
         api_key = self.config["DEEPSEEK_API_KEY"]
