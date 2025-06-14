@@ -45,7 +45,7 @@ https://github.com/user-attachments/assets/c2ba7d09-83ea-4d10-a825-92c30f28c0bd
 
 - 🐳**Built-in Support for Git, Docker, and Dev Tools**: Seamlessly understands and executes Git, Docker, Kubernetes, and package manager commands.
 
-- 👽**User Defined Aliases**: The alias system allows you to create shortcuts for complex commands.
+- 🏷️**User Defined Aliases**: The alias system allows you to create, remove, list, import and export shortcuts for complex commands.
 
 ---
 
@@ -182,7 +182,9 @@ $ quit
 ```
 
 ### Alias Support
+
 Create shortcuts for frequently used commands:
+
 ```bash
 # Create an alias
 alias add gpm "git push origin main"
