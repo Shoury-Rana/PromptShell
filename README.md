@@ -45,6 +45,26 @@ https://github.com/user-attachments/assets/c2ba7d09-83ea-4d10-a825-92c30f28c0bd
 
 - 🐳 **Built-in Support for Git, Docker, and Dev Tools**: Seamlessly understands and executes Git, Docker, Kubernetes, and package manager commands.
 
+### Alias Support
+Create shortcuts for frequently used commands:
+```bash
+# Create an alias
+alias add gpm "git push origin main"
+
+# Use the alias
+!gpm
+
+# List all aliases
+alias list
+
+# Remove an alias
+alias remove gpm
+
+# Import/export aliases
+alias import ~/backup/aliases.json
+alias export ~/backup/aliases.json
+```
+
 ---
 
 ## 📥 Installation
@@ -178,6 +198,14 @@ $ clear
 # Exit PromptShell
 $ quit
 ```
+
+### Alias Management
+The alias system allows you to create shortcuts for complex commands:
+
+- All aliases are prefixed with ! when executing
+- Alias names must be alphanumeric with underscores
+- Supports command arguments after the alias name
+- Import/export functionality for sharing aliases
 
 ---
 
