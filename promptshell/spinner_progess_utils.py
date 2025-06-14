@@ -97,7 +97,7 @@ if __name__ == "__main__":
     @progress_bar(description="Simulating work...")
     def hey():
         totalSteps = 20
-        print("healds;kf")
+        print("testing Progress Bar")
         for i in range(1, totalSteps + 1):
             print(f"test {i}")
             time.sleep(0.2)
