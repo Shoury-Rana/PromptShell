@@ -1,14 +1,21 @@
 """
-Spinner and Progress Bar Utilities for PromptShell
+Spinner an Progress Bar Utilities for PromptShell
 -------------------------------------------------
+from .spinner_progess_utils import spinner, progress_bar
 
 This module provides decorators for adding loading indicators to functions.
-You can use different spinner styles or progress bars to give users feedback
-during long-running operations.
 
---------------------------
-Common Spinner Styles:
---------------------------
+-----------------------------------
+Spinners (for unknown loading time)
+-----------------------------------
+
+Example usage:
+    @spinner(spinner_type="moon", message="[blue]Loading...")
+    def my_function():
+        ...
+
+few common styles
+-----------------
 - "dots"
 - "line"
 - "bouncingBar"
@@ -20,16 +27,14 @@ Common Spinner Styles:
 - "weather"
 - "arrow3"
 - "toggle10"
+=> "random" this will generate random spinner everytime
 
-Example usage:
-    @spinner(spinner_type="moon", message="Loading...")
-    def my_function():
-        ...
+- See all spinner styles: from rich.spinner import SPINNERS; print(list(SPINNERS.keys()))
+- Customize messages and colors as needed.
 
 --------------------------
-Progress Bar Example:
+Progress Bar (for tasks where total steps or time is known)
 --------------------------
-For tasks where you know the total steps, use a progress bar.
 
 Example usage:
     @progress_bar(total=100, description="Processing items...")
@@ -38,13 +43,10 @@ Example usage:
             # do work
             yield 1  # Each yield advances the bar by 1
 
---------------------------
-How to Add More Styles:
---------------------------
-- See all spinner styles: from rich.spinner import SPINNERS; print(list(SPINNERS.keys()))
-- Customize messages and colors as needed.
+NOTE: progress bar don't take simple fuctions as input, they need generators.
+Here the yield keyword is used to generate the progress report for the progress bar decorator.
+Another test example is shown in main funtion below
 
---------------------------
 """
 
 from rich.console import Console
