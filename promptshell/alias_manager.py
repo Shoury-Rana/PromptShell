@@ -3,6 +3,7 @@ import os
 import re
 from datetime import datetime
 from .setup import CONFIG_DIR
+import shlex
 
 ALIAS_FILE = os.path.join(CONFIG_DIR, "aliases.json")
 
@@ -98,3 +99,53 @@ class AliasManager:
             base_command = self.aliases[alias_name]['command']
             return f"{base_command} {args}".strip()
         return input_command
+
+def handle_alias_command(command: str, alias_manager: AliasManager) -> str:
+    try:
+        parts = shlex.split(command)
+        if len(parts) < 2:
+            return "Usage: alias [add|remove|list|import|export|help]"
+        
+        subcommand = parts[1].lower()
+        
+        if subcommand == "add" and len(parts) >= 4:
+            name = parts[2]
+            cmd = " ".join(parts[3:])
+            _, message = alias_manager.add_alias(name, cmd)
+            return message
+        
+        elif subcommand == "remove" and len(parts) >= 3:
+            _, message = alias_manager.remove_alias(parts[2])
+            return message
+        
+        elif subcommand == "list":
+            if len(parts) >= 3:
+                alias = alias_manager.list_aliases(parts[2])
+                if alias:
+                    return f"{parts[2]}: {alias['command']}\nDescription: {alias.get('description', '')}"
+                return "Alias not found"
+            aliases = alias_manager.list_aliases()
+            return "\n".join([f"{name}: {data['command']}" for name, data in aliases.items()])
+        
+        elif subcommand == "import" and len(parts) >= 3:
+            _, message = alias_manager.import_aliases(parts[2])
+            return message
+        
+        elif subcommand == "export" and len(parts) >= 3:
+            _, message = alias_manager.export_aliases(parts[2])
+            return message
+        
+        elif subcommand == "help":
+            return (
+                "Alias Management Commands:\n"
+                "  alias add <name> \"<command>\" - Add new alias\n"
+                "  alias remove <name> - Remove alias\n"
+                "  alias list [name] - List all aliases or show details\n"
+                "  alias import <file> - Import aliases from JSON file\n"
+                "  alias export <file> - Export aliases to JSON file\n"
+                "  alias help - Show this help"
+            )
+        
+        return "Invalid alias command"
+    except Exception as e:
+        return f"Error processing alias command: {str(e)}"
