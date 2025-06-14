@@ -6,7 +6,7 @@ import google.generativeai as genai
 from groq import Groq
 from .setup import get_provider
 from typing import List, Tuple
-from .spinner_progess_utils import spinner, progress_bar
+from .spinner_progress_utils import spinner, progress_bar
 
 class Node:
     def __init__(self, model_name: str, name: str, max_tokens: int = 8192, config: dict = None):
