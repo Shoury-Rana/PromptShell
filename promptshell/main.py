@@ -32,8 +32,7 @@ Type '--help' for assistance and '--config' for settings.{reset_format()}""")
             if len(prompt) + len(user_input) > columns:
                 print()  # Move to the next line if input is too long
 
-            # Support both 'quit' and 'exit' commands to terminate the REPL session
-            if user_input.lower() in ('quit', 'exit'):
+            if user_input.lower() in  ('quit', 'exit'):
                 print(format_text('red', bold=True) + "\nTerminating..." + reset_format())
                 break
 
@@ -50,30 +49,12 @@ Type '--help' for assistance and '--config' for settings.{reset_format()}""")
 - Start your input with '!' to execute a command directly without processing.
 - Start or end your input with '?' to ask a question.
 - Tab completion for files and folders is enabled.
-- Use 'Ctrl + c' or type 'quit' or 'exit' to quit the assistant.
+-Use 'Ctrl + c' or type 'quit' or 'exit' to quit and exit the assistant.
 - Type 'clear' to clear the terminal.{reset_format()}""")
                 continue
 
-            # ✅ Check for destructive command
-            if user_input.startswith("CONFIRM:"):
-                actual_command = user_input.replace("CONFIRM:", "", 1).strip()
-
-                 # Step 1: Initial yes/no confirmation
-                proceed = input(format_text('yellow', bold=True) + f"\n⚠️  This is a destructive command.\nDo you want to continue? (yes/no): " + reset_format())
-                if proceed.strip().lower() != "yes":
-                    print(format_text('red', bold=True) + "\nCommand aborted by user." + reset_format())
-                    continue
-
-                # Step 2: Manual re-entry for safety
-                confirm_input = input(format_text('yellow', bold=True) + f"Type the exact command to proceed:\n> " + reset_format())
-                if confirm_input.strip() != actual_command:
-                    print(format_text('red', bold=True) + "\n❌ Mismatch. Aborting execution!" + reset_format())
-                    continue
-
-                 # If matched, allow execution
-                user_input = actual_command
-
-            result = assistant.execute_command(user_input) # Execute the command using the assistant
+            result = assistant.execute_command(user_input)
+            print(result)
 
         except KeyboardInterrupt:
             print(format_text('red', bold=True) + "\nTerminating..." + reset_format())
