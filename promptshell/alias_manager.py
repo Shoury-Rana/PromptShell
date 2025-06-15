@@ -4,6 +4,7 @@ import re
 from datetime import datetime
 from .setup import CONFIG_DIR
 import shlex
+from pathlib import Path
 
 ALIAS_FILE = os.path.join(CONFIG_DIR, "aliases.json")
 
@@ -67,17 +68,29 @@ class AliasManager:
             return self.aliases.get(name, None)
         return self.aliases
     
+    
+
     def import_aliases(self, file_path):
+        file_path = os.path.expanduser(file_path)  # Handles ~
+        path_obj = Path(file_path)
+
+        if not path_obj.exists() or not path_obj.is_file():
+            return False, f"[ERROR] Import failed: File '{file_path}' not found."
+
         try:
-            with open(file_path, 'r') as f:
+            with open(path_obj, 'r') as f:
                 data = json.load(f)
                 for name, alias_data in data.get('aliases', {}).items():
                     if self.validate_alias_name(name) and self.validate_command(alias_data.get('command', '')):
                         self.aliases[name] = alias_data
             self.save_aliases()
             return True, "Aliases imported successfully"
+        except json.JSONDecodeError:
+            return False, "[ERROR] Invalid JSON format in alias file."
         except Exception as e:
-            return False, f"Import failed: {str(e)}"
+            return False, f"[ERROR] Failed to import aliases: {str(e)}"
+
+    
     
     def export_aliases(self, file_path):
         try:
