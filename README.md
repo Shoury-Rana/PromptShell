@@ -1,7 +1,7 @@
 <h1 align="center" style="font-size: 32px;">
   >_ PromptShell
   <sup>
-    <span style="font-size: 14px; color: #666;">v0.1.1</span>
+    <span style="font-size: 14px; color: #666;">v{version}</span>
   </sup>
 </h1>
 
@@ -183,6 +183,12 @@ $ clear
 # Exit PromptShell
 $ quit
 ```
+
+### CLI Options
+
+- `--version`: Display the current version of PromptShell
+- `--help`: Show help message and usage instructions
+- `--config`: Launch the interactive configuration wizard
 
 ### Alias Support
 
