@@ -27,11 +27,11 @@ https://github.com/user-attachments/assets/c2ba7d09-83ea-4d10-a825-92c30f28c0bd
 * [Installation](#-installation)
 * [Configuration](#️-configuration)
 * [Usage](#-usage)
-* [Examples](#examples)
-* [Development Status](#development-status)
-* [Contributing](#contributing)
-* [License](#license)
-* [Contact](#contact)
+* [Examples](#-examples)
+* [Development Status](#-development-status)
+* [Contributing](#-contributing)
+* [License](#-license)
+* [Contact](#-contact)
 
 ---
 
