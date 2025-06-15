@@ -21,7 +21,7 @@ https://github.com/user-attachments/assets/c2ba7d09-83ea-4d10-a825-92c30f28c0bd
 
 ---
 
-# 📖 Table of Contents
+## 📖 Table of Contents
 
 * [Features](#features)
 * [Installation](#installation)
@@ -165,7 +165,7 @@ Configuration updated!
 
 ---
 
-# 🛠 Usage
+## 🛠 Usage
 
 ### Basic Commands
 
