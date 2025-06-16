@@ -22,14 +22,10 @@ def reset_format():
 
 def get_terminal_size():
     """Get terminal size with fallback to default values."""
-    try:
+     try:
         columns, rows = os.get_terminal_size(0)
-    except (OSError, AttributeError):
-        try:
-            columns, rows = os.get_terminal_size(1)
-        except (OSError, AttributeError):
-            # Default to standard terminal size if we can't get actual size
-            columns, rows = 80, 24
+    except OSError:
+        columns, rows = os.get_terminal_size(1)
     return columns, rows
 
 def get_current_os():
