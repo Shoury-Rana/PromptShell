@@ -1,7 +1,7 @@
 <h1 align="center" style="font-size: 32px;">
   >_ PromptShell
   <sup>
-    <span style="font-size: 14px; color: #666;">v{version}</span>
+    <span style="font-size: 14px; color: #666;">v0.1.1</span>
   </sup>
 </h1>
 
