@@ -174,9 +174,6 @@ $ --config
 # View help and usage instructions
 $ --help
 
-# Check installed version
-$ --version
-
 # Clear the terminal screen
 $ clear
 
