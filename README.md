@@ -196,10 +196,7 @@ $ quit
 ```
 
 ### CLI Options
-
 - `--version`: Display the current version of PromptShell
-- `--help`: Show help message and usage instructions
-- `--config`: Launch the interactive configuration wizard
 
 ### Alias Support
 
