@@ -8,11 +8,17 @@ from .format_utils import format_text, reset_format, get_terminal_size
 from .setup import setup_wizard, load_config, get_active_model
 from .alias_manager import handle_alias_command
 from .version import get_version
+from .tutorial import start_tutorial
 
 def main():
     # Check for version flag
     if len(sys.argv) > 1 and sys.argv[1] == "--version":
         print(f"PromptShell v{get_version()}")
+        return
+
+    # Check for tutorial flag
+    if len(sys.argv) > 1 and sys.argv[1] == "--tutorial":
+        start_tutorial()
         return
 
     config = load_config()
@@ -62,6 +68,7 @@ Type '--help' for assistance and '--config' for settings.{reset_format()}""")
 
 {format_text('yellow', bold=True)}[Special Commands]{reset_format()}
   {format_text('green')}{'--help':<{col_width}}{reset_format()}Show this help message
+  {format_text('green')}{'--tutorial':<{col_width}}{reset_format()}Start the interactive tutorial
   {format_text('green')}{'--config':<{col_width}}{reset_format()}Re-run the setup wizard to change AI provider or model
   {format_text('green')}{'alias':<{col_width}}{reset_format()}Manage command shortcuts (use 'alias help' for details)
   {format_text('green')}{'clear / cls':<{col_width}}{reset_format()}Clear the terminal screen
