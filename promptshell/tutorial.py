@@ -2,10 +2,14 @@ import os
 import sys
 from typing import Dict, List, Optional, Callable
 import questionary
+import time # Import time for sleep
 from .format_utils import format_text, reset_format
 from .setup import CONFIG_DIR
 
 TUTORIAL_PROGRESS_FILE = os.path.join(CONFIG_DIR, "tutorial_progress.json")
+
+def clear_screen():
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 class TutorialStep:
     def __init__(self, title: str, content: str, exercise: Optional[str] = None, 
@@ -72,7 +76,10 @@ Type: list all files in the current directory
                 exercise="Try listing all files in the current directory using natural language",
                 validation=lambda x: "list" in x.lower() and "file" in x.lower(),
                 hints=["Try using words like 'list', 'show', or 'display'", "Mention that you want to see 'files' or 'contents'"],
-                dynamic_output_generator=lambda x: f"Understood! Simulating a list of files based on your request: \n.DS_Store\npromptshell/\nREADME.md\ntests/\n.gitignore\nLICENSE\npyproject.toml"
+                dynamic_output_generator=lambda x: (
+                    "Understood! Simulating a list of files based on your request: \n.DS_Store\npromptshell/\nREADME.md\ntests/\n.gitignore\nLICENSE\npyproject.toml" if "list all files in the current directory" in x.lower() else
+                    f"Understood! Simulating response for: {x.strip()}\n.DS_Store\npromptshell/\nREADME.md\ntests/\n.gitignore\nLICENSE\npyproject.toml" # Generic fallback
+                )
             ),
             TutorialStep(
                 "Direct Command Execution",
@@ -95,12 +102,13 @@ Type: !echo "Welcome to PromptShell"
                 validation=lambda x: x.startswith('!'),
                 hints=["Start your command with '!'", "Try commands like !ls, !pwd, !echo, !mkdir, !rm"],
                 dynamic_output_generator=lambda x: (
-                    "Simulating output for: " + x + "\n.DS_Store\npromptshell/\nREADME.md\ntests/\n.gitignore\nLICENSE\npyproject.toml" if 'ls' in x.lower() else
-                    "Simulating output for: " + x + "\n/c/Users/piyus/OneDrive/Desktop/SSOC/PromptShell" if 'pwd' in x.lower() else
-                    "Simulating output for: " + x + "\nDirectory created: " + x.split(' ', 1)[1] if 'mkdir' in x.lower() and len(x.split(' ', 1)) > 1 else
-                    "Simulating output for: " + x + "\nFile or directory removed: " + x.split(' ', 1)[1] if 'rm' in x.lower() and len(x.split(' ', 1)) > 1 else
+                    "Welcome to PromptShell" if x.lower() == '!echo "welcome to promptshell"' else
+                    "Output for: " + x + "\n.DS_Store\npromptshell/\nREADME.md\ntests/\n.gitignore\nLICENSE\npyproject.toml" if 'ls' in x.lower() else
+                    "Output for: " + x + "\n/c/Users/piyus/OneDrive/Desktop/SSOC/PromptShell" if 'pwd' in x.lower() else
+                    "Output for: " + x + "\nDirectory created: " + x.split(' ', 1)[1] if 'mkdir' in x.lower() and len(x.split(' ', 1)) > 1 else
+                    "Output for: " + x + "\nFile or directory removed: " + x.split(' ', 1)[1] if 'rm' in x.lower() and len(x.split(' ', 1)) > 1 else
                     x.split(' ', 1)[1].strip("\'\"") if 'echo' in x.lower() and len(x.split(' ', 1)) > 1 else
-                    f"Simulating execution of: {x.strip()}" # Generic fallback
+                    f"Executing: {x.strip()}" # Generic fallback
                 )
             ),
             TutorialStep(
@@ -124,13 +132,15 @@ Type: ?What is the purpose of the 'ls' command?
                 validation=lambda x: x.startswith('?') or x.endswith('?'),
                 hints=["Start or end your question with '?'", "Ask about a specific command's purpose"],
                 dynamic_output_generator=lambda x: (
-                    "Simulating AI response: The 'mkdir' command creates new directories. You can specify the full path to the new directory." if 'create' in x.lower() and ('directory' in x.lower() or 'folder' in x.lower()) or 'mkdir' in x.lower() else
-                    "Simulating AI response: The 'ls' command lists the contents of a directory. It shows files and subdirectories." if 'ls' in x.lower() else
-                    "Simulating AI response: The 'cd' command changes the current working directory." if 'cd' in x.lower() else
-                    "Simulating AI response: The 'pwd' command prints the name of the current working directory." if 'pwd' in x.lower() else
-                    "Simulating AI response: The 'rm' command removes files or directories." if 'rm' in x.lower() else
-                    "Simulating AI response: That's an interesting question! In a real PromptShell, our AI would provide a comprehensive answer using its knowledge base. For this tutorial, we simulate a general response. Please try asking about a specific shell command to see a tailored simulated response."
-                ) + f"\n\n(In a real PromptShell environment, this would be answered by an AI model, either local or API-based.)"
+                    "The 'ls' command lists the contents of a directory. It shows files and subdirectories." if 'ls' in x.lower() else
+                    "The 'mkdir' command creates new directories. You can specify the full path to the new directory." if 'create' in x.lower() and ('directory' in x.lower() or 'folder' in x.lower()) or 'mkdir' in x.lower() else
+                    "The 'cp' command copies files or directories, while 'mv' moves (renames) them." if 'cp' in x.lower() and 'mv' in x.lower() and 'difference' in x.lower() else
+                    "The 'chmod' command changes file permissions (read, write, execute) for users, groups, and others." if 'chmod' in x.lower() and 'purpose' in x.lower() else
+                    "The 'cd' command changes the current working directory." if 'cd' in x.lower() else
+                    "The 'pwd' command prints the name of the current working directory." if 'pwd' in x.lower() else
+                    "The 'rm' command removes files or directories." if 'rm' in x.lower() else
+                    "That's an interesting question! For this tutorial, we simulate a general response. Please try asking about a specific shell command to see a tailored simulated response."
+                )
             ),
             TutorialStep(
                 "Smart Tab Completion",
@@ -151,15 +161,22 @@ Type: cd
 (Then press Enter to see a simulated list of directories)
 
 {format_text('magenta', bold=True)}Note:{reset_format()}
-- In a real PromptShell, you would press TAB for interactive completion.
-- This tutorial simulates the *output* of tab completion.
+- In a real PromptShell, you would press TAB for interactive completion
+- This tutorial simulates the *output* of tab completion
 - Works with both natural language and direct commands
 - Helps prevent typos in file paths
 - Saves time when navigating directories""",
                 exercise="Try using tab completion to navigate to a directory",
                 validation=lambda x: x.startswith('cd '),
                 hints=["Type 'cd ' and press Enter", "The tutorial will show you the simulated completion options"],
-                dynamic_output_generator=lambda x: f"Simulating tab completion for '{x.strip()}':\n  " + "\n  ".join([d for d in os.listdir('.') if os.path.isdir(d)])
+                dynamic_output_generator=lambda x: f"""{format_text('yellow', bold=True)}Available directories:{reset_format()}
+  {format_text('cyan')}promptshell/{reset_format()}    - Main package directory
+  {format_text('cyan')}tests/{reset_format()}         - Test files
+  {format_text('cyan')}docs/{reset_format()}          - Documentation
+  {format_text('cyan')}examples/{reset_format()}      - Example scripts
+  {format_text('cyan')}venv/{reset_format()}          - Virtual environment
+
+{format_text('green')}Tip: Use arrow keys or type more characters to filter results{reset_format()}"""
             ),
             TutorialStep(
                 "User-Defined Aliases",
@@ -203,7 +220,30 @@ Type: --config
                 exercise="Try accessing the configuration menu",
                 validation=lambda x: x == '--config',
                 hints=["Type '--config' to access the configuration menu"],
-                simulated_output="Opening configuration menu... (In a real scenario, this would launch the interactive configuration. Type 'next' to continue the tutorial.)"
+                dynamic_output_generator=lambda x: f"""Sample Configuration Menu:
+
+{format_text('yellow')}Welcome to PromptShell Configuration!
+
+Here you can set up your AI model, API keys, and other preferences.
+
+{format_text('cyan')}1. AI Model Selection:
+   Current: Local (Llama 3)
+   Options: Local (Llama 3), OpenAI (GPT-4), Google (Gemini)
+
+2. API Key Management:
+   - Set OpenAI API Key
+   - Set Google API Key
+
+3. Advanced Settings:
+   - Prompt Customization
+   - Output Formatting
+
+4. Save and Exit
+5. Discard Changes
+
+{format_text('yellow')}Type the number of an option to select it, or 'q' to quit.
+
+(This is a simulated output for the tutorial.){reset_format()}"""
             ),
             TutorialStep(
                 "Congratulations!",
@@ -386,8 +426,10 @@ You've completed the PromptShell tutorial! You now know how to:
 
     def run(self):
         while self.current_step < len(self.steps):
+            # Clear screen at the beginning of each step's display cycle
+            clear_screen() # Use the helper function
+            
             step = self.steps[self.current_step]
-            os.system('cls' if os.name == 'nt' else 'clear')
             
             # Show progress
             print(f"{format_text('yellow', bold=True)}Step {self.current_step + 1}/{len(self.steps)}: {step.title}{reset_format()}\n")
@@ -413,33 +455,37 @@ You've completed the PromptShell tutorial! You now know how to:
             result = self.handle_navigation(user_input)
             if result == 'exit':
                 break
-            if result:
-                continue
             
-            # Handle exercise validation
+            # If navigation command was handled, continue to next loop iteration
+            if result:
+                continue # The navigation handler already takes care of 'Press Enter to continue...' if needed
+            
+            # Handle exercise validation (if not a navigation command)
             if step.exercise:
-                display_output = step.simulated_output
+                display_output = None
                 if step.dynamic_output_generator:
                     generated = step.dynamic_output_generator(user_input)
                     if generated is not None:
                         display_output = generated
 
+                # Always show simulated output if generated, for exercise steps
                 if display_output:
                     print(f"\n{format_text('yellow', bold=True)}Simulated Output:{reset_format()}")
                     print(display_output)
+                    sys.stdout.flush() # Ensure output is immediately visible
+                    time.sleep(2.0) # Increased pause to help visibility
                 
                 if step.validation:
                     if step.validation(user_input):
                         print(f"\n{format_text('green')}Correct!{reset_format()}")
-                        input("\nPress Enter to continue...")
+                        input("\nPress Enter to continue...") # Acknowledge success
                         self.current_step += 1
                         self.save_progress()
                     else:
-                        print(f"{format_text('red')}That's not quite right. Try again!{reset_format()}")
-                        print(f"Type 'hint' for help or 'skip' to move on.")
+                        pass # Do nothing, just let the loop re-display the step
                 else:
-                    # If no specific validation, just move to the next step
-                    print(f"\n{format_text('yellow')}Input received, but no specific validation for this exercise. Continuing...{reset_format()}")
+                    # If no specific validation, just show output and move to the next step
+                    print(f"\n{format_text('yellow')}Input received. Continuing...{reset_format()}")
                     input("\nPress Enter to continue...")
                     self.current_step += 1
                     self.save_progress()
@@ -448,13 +494,15 @@ You've completed the PromptShell tutorial! You now know how to:
                 # This is an unrecognized command in a non-exercise context.
                 print(f"\n{format_text('red', bold=True)}Error: Unrecognized command or input.{reset_format()}")
                 print(f"Please use navigation commands (e.g., 'next', 'help') to continue, or press Enter to advance.")
-                input("\nPress Enter to continue...")
-        
+                input("\nPress Enter to continue...") # Acknowledge error, stay on step until navigation
+
+        # The screen clearing happens at the beginning of the next loop iteration, after user acknowledges current step's output
         if self.current_step >= len(self.steps):
             print(f"\n{format_text('green', bold=True)}Tutorial completed!{reset_format()}")
             if questionary.confirm("Would you like to reset the tutorial progress?").ask():
                 self.reset_progress()
 
 def start_tutorial():
+    clear_screen() # Clear screen once at the very beginning of the tutorial
     tutorial = Tutorial()
     tutorial.run() 

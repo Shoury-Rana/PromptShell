@@ -197,6 +197,7 @@ $ quit
 
 ### CLI Options
 - `--version`: Display the current version of PromptShell
+- `--tutorial`: Start the interactive tutorial to learn PromptShell features
 
 ### Alias Support
 
