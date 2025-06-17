@@ -195,6 +195,9 @@ $ clear
 $ quit
 ```
 
+### CLI Options
+- `--version`: Display the current version of PromptShell
+
 ### Alias Support
 
 Create shortcuts for frequently used commands:
