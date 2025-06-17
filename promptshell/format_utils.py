@@ -22,7 +22,7 @@ def reset_format():
 
 def get_terminal_size():
     """Get terminal size with fallback to default values."""
-     try:
+    try:
         columns, rows = os.get_terminal_size(0)
     except OSError:
         columns, rows = os.get_terminal_size(1)
