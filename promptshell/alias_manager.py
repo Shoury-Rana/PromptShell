@@ -4,6 +4,8 @@ import re
 from datetime import datetime
 from .setup import CONFIG_DIR
 import shlex
+from pathlib import Path
+from .format_utils import format_text, reset_format
 
 ALIAS_FILE = os.path.join(CONFIG_DIR, "aliases.json")
 
@@ -37,13 +39,13 @@ class AliasManager:
     
     def add_alias(self, name, command, description=""):
         if not self.validate_alias_name(name):
-            return False, "Invalid alias name. Must be alphanumeric with underscores"
+            return False, f"{format_text("red")}Invalid alias name: Name must be alphanumeric with underscores{reset_format()}"
         
         if not self.validate_command(command):
-            return False, "Command contains dangerous patterns"
+            return False, f"{format_text("red", bold=True)}Invalid Command: Contains dangerous patterns{reset_format()}"
         
         if name in self.aliases:
-            return False, "Alias already exists"
+            return False, f"{format_text("red")}Duplicate alias name: Alias already exists{reset_format()}"
         
         self.aliases[name] = {
             'command': command,
@@ -56,7 +58,7 @@ class AliasManager:
     
     def remove_alias(self, name):
         if name not in self.aliases:
-            return False, "Alias not found"
+            return False, f"{format_text("red")}Alias not found{reset_format()}"
         
         del self.aliases[name]
         self.save_aliases()
@@ -67,17 +69,29 @@ class AliasManager:
             return self.aliases.get(name, None)
         return self.aliases
     
+    
+
     def import_aliases(self, file_path):
+        file_path = os.path.expanduser(file_path)  # Handles ~
+        path_obj = Path(file_path)
+
+        if not path_obj.exists() or not path_obj.is_file():
+            return False, f"{format_text("red")}Import error: File '{file_path}' not found.{reset_format()}"
+
         try:
-            with open(file_path, 'r') as f:
+            with open(path_obj, 'r') as f:
                 data = json.load(f)
                 for name, alias_data in data.get('aliases', {}).items():
                     if self.validate_alias_name(name) and self.validate_command(alias_data.get('command', '')):
                         self.aliases[name] = alias_data
             self.save_aliases()
             return True, "Aliases imported successfully"
+        except json.JSONDecodeError:
+            return False, f"{format_text("red")}Invalid JSON: Incorrect JSON format in alias file{reset_format()}."
         except Exception as e:
-            return False, f"Import failed: {str(e)}"
+            return False, f"{format_text("red")}Import error: Failed to import aliases: {str(e)}{reset_format()}"
+
+    
     
     def export_aliases(self, file_path):
         try:
@@ -85,7 +99,7 @@ class AliasManager:
                 json.dump({'aliases': self.aliases}, f, indent=2)
             return True, "Aliases exported successfully"
         except Exception as e:
-            return False, f"Export failed: {str(e)}"
+            return False, f"{format_text("red")}Export failed: {str(e)}{reset_format()}"
     
     def expand_alias(self, input_command):
         parts = input_command.strip().split(maxsplit=1)
@@ -104,7 +118,7 @@ def handle_alias_command(command: str, alias_manager: AliasManager) -> str:
     try:
         parts = shlex.split(command)
         if len(parts) < 2:
-            return "Usage: alias [add|remove|list|import|export|help]"
+            return f"{format_text("white", bold=True)}Usage: alias [add|remove|list|import|export|help]{reset_format()}"
         
         subcommand = parts[1].lower()
         
@@ -123,7 +137,7 @@ def handle_alias_command(command: str, alias_manager: AliasManager) -> str:
                 alias = alias_manager.list_aliases(parts[2])
                 if alias:
                     return f"{parts[2]}: {alias['command']}\nDescription: {alias.get('description', '')}"
-                return "Alias not found"
+                return f"{format_text("red")}Invalid alias name: Alias not found{reset_format()}"
             aliases = alias_manager.list_aliases()
             return "\n".join([f"{name}: {data['command']}" for name, data in aliases.items()])
         
@@ -146,6 +160,6 @@ def handle_alias_command(command: str, alias_manager: AliasManager) -> str:
                 "  alias help - Show this help"
             )
         
-        return "Invalid alias command"
+        return f"{format_text("red")}Invalid alias command: Use alias help for valid all commands{reset_format()}"
     except Exception as e:
-        return f"Error processing alias command: {str(e)}"
+        return f"{format_text("red")}Error processing alias command: {str(e)}{reset_format()}"

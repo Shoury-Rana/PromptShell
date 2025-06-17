@@ -53,15 +53,27 @@ Type '--help' for assistance and '--config' for settings.{reset_format()}""")
                 continue
 
             if user_input.lower() == "--help":
-                print(f"""{format_text('blue')}- You can use natural language queries or standard shell commands.
-- Start your input with '!' to execute a command directly without processing.
-- Start or end your input with '?' to ask a question.
-- Tab completion for files and folders is enabled.
--Use 'Ctrl + c' or type 'quit' or 'exit' to quit and exit the assistant.
-- Type 'clear' to clear the terminal.{reset_format()}""")
+                col_width = 18 
+                print(f"""
+{format_text('yellow', bold=True)}[Usage Patterns]{reset_format()}
+  {format_text('cyan')}Natural Language:{reset_format()}  show me all python files modified last week
+  {format_text('cyan')}Direct Execution:{reset_format()}  Use ! in input. eg., !ls -l
+  {format_text('cyan')}Ask a Question:{reset_format()}    Use ? in input. eg., what is the purpose of the chmod command?
+
+{format_text('yellow', bold=True)}[Special Commands]{reset_format()}
+  {format_text('green')}{'--help':<{col_width}}{reset_format()}Show this help message
+  {format_text('green')}{'--config':<{col_width}}{reset_format()}Re-run the setup wizard to change AI provider or model
+  {format_text('green')}{'alias':<{col_width}}{reset_format()}Manage command shortcuts (use 'alias help' for details)
+  {format_text('green')}{'clear / cls':<{col_width}}{reset_format()}Clear the terminal screen
+  {format_text('green')}{'exit / quit':<{col_width}}{reset_format()}Terminate the assistant
+
+{format_text('yellow', bold=True)}[Tips]{reset_format()}
+  - Use {format_text('magenta')}Tab{reset_format()} for auto-completion of file and directory paths.
+  - Prefixing with {format_text('magenta')}!{reset_format()} bypasses the AI for raw speed and direct execution.
+""")
                 continue
 
-            if user_input.lower().startswith("alias "):
+            if user_input.lower().rstrip().startswith("alias"):
                 result = handle_alias_command(user_input, assistant.alias_manager)
                 print(result)
                 continue
