@@ -185,6 +185,9 @@ $ What's the command to list all hidden files?
 # Configure or change the LLM provider
 $ --config
 
+# Start the interactive tutorial
+$ --tutorial
+
 # View help and usage instructions
 $ --help
 
@@ -197,7 +200,6 @@ $ quit
 
 ### CLI Options
 - `--version`: Display the current version of PromptShell
-- `--tutorial`: Start the interactive tutorial to learn PromptShell features
 
 ### Alias Support
 

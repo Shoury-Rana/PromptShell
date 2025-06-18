@@ -117,7 +117,7 @@ Type: !echo "Welcome to PromptShell"
 Need help with a command or concept? Just ask! Use the '?' prefix or suffix to ask questions about shell commands, system operations, or general computing concepts.
 
 {format_text('yellow', bold=True)}Example:{reset_format()}
-?What is the difference between 'cp' and 'mv'?
+What is the difference between 'cp' and 'mv'?
 How do I create a new directory??
 ?What is the purpose of the chmod command?
 
@@ -190,53 +190,25 @@ Create shortcuts for frequently used commands using the alias system.
 - alias import/export <file> - Import/export aliases
 
 {format_text('cyan', bold=True)}Try it yourself:{reset_format()}
-Type: alias add hello "echo 'Hello, World!'"
+1. First create the alias:
+   Type: alias add hello "echo 'Hello, World!'"
+
+2. Then execute the alias:
+   Type: !hello
 
 {format_text('magenta', bold=True)}Note:{reset_format()}
 - Aliases can include complex commands
 - Use quotes for commands with spaces
-- Aliases persist between sessions""",
+- Aliases persist between sessions
+- Use ! prefix to execute aliases""",
                 exercise="Try creating an alias for a simple command",
-                validation=lambda x: x.startswith('alias add '),
-                hints=["Start with 'alias add'", "Give your alias a name", "Put the command in quotes"],
-                dynamic_output_generator=lambda x: f"Alias '{x.split(' ')[2]}' added successfully." if len(x.split(' ')) > 2 else "Alias added successfully."
+                validation=lambda x: x.startswith('alias add ') or x == '!hello',
+                hints=["First type 'alias add hello' to create the alias", "Then type '!hello' to execute it"],
+                dynamic_output_generator=lambda x: (
+                    f"Alias '{x.split(' ')[2]}' added successfully." if x.startswith('alias add') and len(x.split(' ')) > 2
+                    else "Hello, World!" if x == '!hello'
+                    else "Alias added successfully.")
             ),
-            TutorialStep(
-                "Configuration",
-                f"""{format_text('green', bold=True)}Configuration{reset_format()}
-PromptShell can be configured to use different AI models and providers.
-
-{format_text('yellow', bold=True)}Configuration Options:{reset_format()}
-- Local models (privacy-first, needs 4GB+ RAM)
-- API-based models (faster, requires internet)
-
-{format_text('cyan', bold=True)}To configure:{reset_format()}
-Type: --config
-
-{format_text('magenta', bold=True)}Note:{reset_format()}
-- Configuration is saved between sessions
-- You can change settings anytime
-- Different models offer different capabilities""",
-                exercise="Try accessing the configuration menu",
-                validation=lambda x: x == '--config',
-                hints=["Type '--config' to access the configuration menu"],
-                dynamic_output_generator=lambda x: f"""Sample Configuration Menu:
-
-{format_text('yellow')}Welcome to PromptShell Configuration!
-
-Here you can set up your AI model, API keys, and other preferences.
-
-{format_text('cyan')}1. AI Model Selection:
-   Current: Local (Llama 3)
-   Options: Local (Llama 3), OpenAI (GPT-4), Google (Gemini)
-
-2. API Key Management:
-   - Set OpenAI API Key
-   - Set Google API Key
-
-3. Advanced Settings:
-   - Prompt Customization
-   - Output Formatting
 
 4. Save and Exit
 5. Discard Changes
@@ -251,10 +223,6 @@ Here you can set up your AI model, API keys, and other preferences.
 You've completed the PromptShell tutorial! You now know how to:
 - Use natural language commands
 - Execute direct shell commands
-- Ask questions about commands
-- Use tab completion
-- Create and manage aliases
-- Configure PromptShell
 
 {format_text('yellow', bold=True)}Remember:{reset_format()}
 - Type --help anytime for a quick reference
@@ -425,8 +393,9 @@ You've completed the PromptShell tutorial! You now know how to:
         return False
 
     def run(self):
-        while self.current_step < len(self.steps):
-            # Clear screen at the beginning of each step's display cycle
+        try:
+            while self.current_step < len(self.steps):
+                # Clear screen at the beginning of each step's display cycle
             clear_screen() # Use the helper function
             
             step = self.steps[self.current_step]
@@ -501,8 +470,11 @@ You've completed the PromptShell tutorial! You now know how to:
             print(f"\n{format_text('green', bold=True)}Tutorial completed!{reset_format()}")
             if questionary.confirm("Would you like to reset the tutorial progress?").ask():
                 self.reset_progress()
+        except KeyboardInterrupt:
+            print(f"\n\n{format_text('yellow', bold=True)}Tutorial interrupted. Goodbye!{reset_format()}")
+            return
 
 def start_tutorial():
     clear_screen() # Clear screen once at the very beginning of the tutorial
     tutorial = Tutorial()
-    tutorial.run() 
+    tutorial.run()

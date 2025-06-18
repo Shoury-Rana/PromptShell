@@ -16,11 +16,6 @@ def main():
         print(f"PromptShell v{get_version()}")
         return
 
-    # Check for tutorial flag
-    if len(sys.argv) > 1 and sys.argv[1] == "--tutorial":
-        start_tutorial()
-        return
-
     config = load_config()
     if not config:
         print("First-time setup required!")
@@ -56,6 +51,10 @@ Type '--help' for assistance and '--config' for settings.{reset_format()}""")
                 model_name = get_active_model()
                 assistant = AITerminalAssistant(config=config, model_name=model_name)
                 print(f"{format_text('yellow', bold=True)}Configuration updated!{reset_format()}")
+                continue
+
+            if user_input.lower() == "--tutorial":
+                start_tutorial()
                 continue
 
             if user_input.lower() == "--help":
