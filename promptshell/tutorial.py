@@ -184,14 +184,14 @@ Type: cd
 Create shortcuts for frequently used commands using the alias system.
 
 {format_text('yellow', bold=True)}Basic Alias Commands:{reset_format()}
-- alias add <name> "<command>" - Create new alias
+- alias add <name> \"<command>\" - Create new alias
 - alias list - Show all aliases
 - alias remove <name> - Remove an alias
 - alias import/export <file> - Import/export aliases
 
 {format_text('cyan', bold=True)}Try it yourself:{reset_format()}
 1. First create the alias:
-   Type: alias add hello "echo 'Hello, World!'"
+   Type: alias add hello \"echo 'Hello, World!'\""
 
 2. Then execute the alias:
    Type: !hello
@@ -208,14 +208,6 @@ Create shortcuts for frequently used commands using the alias system.
                     f"Alias '{x.split(' ')[2]}' added successfully." if x.startswith('alias add') and len(x.split(' ')) > 2
                     else "Hello, World!" if x == '!hello'
                     else "Alias added successfully.")
-            ),
-
-4. Save and Exit
-5. Discard Changes
-
-{format_text('yellow')}Type the number of an option to select it, or 'q' to quit.
-
-(This is a simulated output for the tutorial.){reset_format()}"""
             ),
             TutorialStep(
                 "Congratulations!",
@@ -396,80 +388,80 @@ You've completed the PromptShell tutorial! You now know how to:
         try:
             while self.current_step < len(self.steps):
                 # Clear screen at the beginning of each step's display cycle
-            clear_screen() # Use the helper function
-            
-            step = self.steps[self.current_step]
-            
-            # Show progress
-            print(f"{format_text('yellow', bold=True)}Step {self.current_step + 1}/{len(self.steps)}: {step.title}{reset_format()}\n")
-            
-            # Show content
-            print(step.content)
-            
-            # Show exercise if present
-            if step.exercise:
-                print(f"\n{format_text('cyan', bold=True)}Exercise:{reset_format()}")
-                print(step.exercise)
-            
-            # Show navigation options
-            print(f"\n{format_text('yellow', bold=True)}Navigation:{reset_format()}")
-            print("next/n: Next step    prev/p: Previous step    skip/s: Skip step")
-            print("help/h: Show help    hint: Get hint          exit/q: Quit")
-            print("goto <n>: Jump to step    list/ls: List steps    reset: Start over")
-            
-            # Get user input
-            user_input = input("\n> ").strip()
-            
-            # Handle navigation
-            result = self.handle_navigation(user_input)
-            if result == 'exit':
-                break
-            
-            # If navigation command was handled, continue to next loop iteration
-            if result:
-                continue # The navigation handler already takes care of 'Press Enter to continue...' if needed
-            
-            # Handle exercise validation (if not a navigation command)
-            if step.exercise:
-                display_output = None
-                if step.dynamic_output_generator:
-                    generated = step.dynamic_output_generator(user_input)
-                    if generated is not None:
-                        display_output = generated
-
-                # Always show simulated output if generated, for exercise steps
-                if display_output:
-                    print(f"\n{format_text('yellow', bold=True)}Simulated Output:{reset_format()}")
-                    print(display_output)
-                    sys.stdout.flush() # Ensure output is immediately visible
-                    time.sleep(2.0) # Increased pause to help visibility
+                clear_screen() # Use the helper function
                 
-                if step.validation:
-                    if step.validation(user_input):
-                        print(f"\n{format_text('green')}Correct!{reset_format()}")
-                        input("\nPress Enter to continue...") # Acknowledge success
+                step = self.steps[self.current_step]
+                
+                # Show progress
+                print(f"{format_text('yellow', bold=True)}Step {self.current_step + 1}/{len(self.steps)}: {step.title}{reset_format()}\n")
+                
+                # Show content
+                print(step.content)
+                
+                # Show exercise if present
+                if step.exercise:
+                    print(f"\n{format_text('cyan', bold=True)}Exercise:{reset_format()}")
+                    print(step.exercise)
+                
+                # Show navigation options
+                print(f"\n{format_text('yellow', bold=True)}Navigation:{reset_format()}")
+                print("next/n: Next step    prev/p: Previous step    skip/s: Skip step")
+                print("help/h: Show help    hint: Get hint          exit/q: Quit")
+                print("goto <n>: Jump to step    list/ls: List steps    reset: Start over")
+                
+                # Get user input
+                user_input = input("\n> ").strip()
+                
+                # Handle navigation
+                result = self.handle_navigation(user_input)
+                if result == 'exit':
+                    break
+                
+                # If navigation command was handled, continue to next loop iteration
+                if result:
+                    continue # The navigation handler already takes care of 'Press Enter to continue...' if needed
+                
+                # Handle exercise validation (if not a navigation command)
+                if step.exercise:
+                    display_output = None
+                    if step.dynamic_output_generator:
+                        generated = step.dynamic_output_generator(user_input)
+                        if generated is not None:
+                            display_output = generated
+
+                    # Always show simulated output if generated, for exercise steps
+                    if display_output:
+                        print(f"\n{format_text('yellow', bold=True)}Simulated Output:{reset_format()}")
+                        print(display_output)
+                        sys.stdout.flush() # Ensure output is immediately visible
+                        time.sleep(2.0) # Increased pause to help visibility
+                    
+                    if step.validation:
+                        if step.validation(user_input):
+                            print(f"\n{format_text('green')}Correct!{reset_format()}")
+                            input("\nPress Enter to continue...") # Acknowledge success
+                            self.current_step += 1
+                            self.save_progress()
+                        else:
+                            pass # Do nothing, just let the loop re-display the step
+                    else:
+                        # If no specific validation, just show output and move to the next step
+                        print(f"\n{format_text('yellow')}Input received. Continuing...{reset_format()}")
+                        input("\nPress Enter to continue...")
                         self.current_step += 1
                         self.save_progress()
-                    else:
-                        pass # Do nothing, just let the loop re-display the step
                 else:
-                    # If no specific validation, just show output and move to the next step
-                    print(f"\n{format_text('yellow')}Input received. Continuing...{reset_format()}")
-                    input("\nPress Enter to continue...")
-                    self.current_step += 1
-                    self.save_progress()
-            else:
-                # Input is not a navigation command, and it's not an exercise step.
-                # This is an unrecognized command in a non-exercise context.
-                print(f"\n{format_text('red', bold=True)}Error: Unrecognized command or input.{reset_format()}")
-                print(f"Please use navigation commands (e.g., 'next', 'help') to continue, or press Enter to advance.")
-                input("\nPress Enter to continue...") # Acknowledge error, stay on step until navigation
+                    # Input is not a navigation command, and it's not an exercise step.
+                    # This is an unrecognized command in a non-exercise context.
+                    print(f"\n{format_text('red', bold=True)}Error: Unrecognized command or input.{reset_format()}")
+                    print(f"Please use navigation commands (e.g., 'next', 'help') to continue, or press Enter to advance.")
+                    input("\nPress Enter to continue...") # Acknowledge error, stay on step until navigation
 
-        # The screen clearing happens at the beginning of the next loop iteration, after user acknowledges current step's output
-        if self.current_step >= len(self.steps):
-            print(f"\n{format_text('green', bold=True)}Tutorial completed!{reset_format()}")
-            if questionary.confirm("Would you like to reset the tutorial progress?").ask():
-                self.reset_progress()
+            # The screen clearing happens at the beginning of the next loop iteration, after user acknowledges current step's output
+            if self.current_step >= len(self.steps):
+                print(f"\n{format_text('green', bold=True)}Tutorial completed!{reset_format()}")
+                if questionary.confirm("Would you like to reset the tutorial progress?").ask():
+                    self.reset_progress()
         except KeyboardInterrupt:
             print(f"\n\n{format_text('yellow', bold=True)}Tutorial interrupted. Goodbye!{reset_format()}")
             return
