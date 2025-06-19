@@ -58,6 +58,16 @@ import random
 
 #--------SPINNER-------
 def spinner(spinner_type="dots", message=" [cyan]Working..."):
+    """Decorator for CLI spinners.
+    
+    Args:
+        spinner_type: Spinner style
+        message: Display message
+        
+    Returns:
+        Decorator function
+    """
+    
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
@@ -74,6 +84,15 @@ def spinner(spinner_type="dots", message=" [cyan]Working..."):
 
 #--------PROGRESS BAR-------
 def progress_bar(description="Downloading..."):
+    """Decorator for progress bars.
+    
+    Args:
+        description: Progress label
+        
+    Returns:
+        Decorator function
+    """
+    
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
