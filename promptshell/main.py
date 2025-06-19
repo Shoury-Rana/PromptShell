@@ -10,6 +10,8 @@ from .alias_manager import handle_alias_command
 from .version import get_version
 
 def main():
+    """Main entry point for the terminal assistant."""
+
     # Check for version flag
     if len(sys.argv) > 1 and sys.argv[1] == "--version":
         print(f"PromptShell v{get_version()}")

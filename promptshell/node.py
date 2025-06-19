@@ -10,6 +10,15 @@ from .spinner_progress_utils import spinner, progress_bar
 
 class Node:
     def __init__(self, model_name: str, name: str, max_tokens: int = 8192, config: dict = None):
+        """Initializes an AI node.
+        
+        Args:
+            model_name: AI model name
+            name: Node role name
+            max_tokens: Response token limit (default: 8192)
+            config: Configuration dictionary (default: None)
+        """
+        
         self.model_name = model_name
         self.name = name
         self.definition = ""
@@ -19,6 +28,16 @@ class Node:
         self.provider = get_provider()
 
     def __call__(self, input_text: str, additional_data: dict = None):
+        """Processes input through the AI node.
+        
+        Args:
+            input_text: Input prompt
+            additional_data: Supplementary context (optional)
+            
+        Returns:
+            AI-generated response
+        """
+        
         try:
             context_str = "\n".join([f"{msg['role']} {msg['content']}" for msg in self.context])
             prompt = f""" system {self.definition} 
@@ -60,6 +79,15 @@ user {input_text} """
 
     @spinner(spinner_type="random", message=" [magenta]Waiting for API response...")
     def _call_ollama(self, prompt: str) -> str:
+        """Calls Ollama API.
+        
+        Args:
+            prompt: Input prompt
+            
+        Returns:
+            API response
+        """
+        
         response = requests.post(
             'http://localhost:11434/api/generate',
             json={
@@ -79,6 +107,15 @@ user {input_text} """
 
     @spinner(spinner_type="random", message=" [magenta]Waiting for API response...")
     def _call_openai(self, prompt: str) -> str:
+        """Calls OpenAI API.
+        
+        Args:
+            prompt: Input prompt
+            
+        Returns:
+            API response
+        """
+        
         api_key = self.config["OPENAI_API_KEY"]
         client = OpenAI(api_key=api_key)
         response = client.chat.completions.create(
@@ -89,6 +126,15 @@ user {input_text} """
 
     @spinner(spinner_type="random", message=" [magenta]Waiting for API response...")
     def _call_anthropic(self, prompt: str) -> str:
+        """Calls Anthropic API.
+        
+        Args:
+            prompt: Input prompt
+            
+        Returns:
+            API response
+        """
+        
         api_key = self.config["ANTHROPIC_API_KEY"]
         client = anthropic.Anthropic(api_key=api_key)
         response = client.messages.create(
@@ -100,6 +146,15 @@ user {input_text} """
 
     @spinner(spinner_type="random", message=" [magenta]Waiting for API response...")
     def _call_google(self, prompt: str) -> str:
+        """Calls Google API.
+        
+        Args:
+            prompt: Input prompt
+            
+        Returns:
+            API response
+        """
+        
         api_key = self.config["GOOGLE_API_KEY"]
         genai.configure(api_key=api_key)
         model = genai.GenerativeModel(self.model_name)
@@ -108,6 +163,15 @@ user {input_text} """
 
     @spinner(spinner_type="random", message=" [magenta]Waiting for API response...")
     def _call_groq(self, prompt: str) -> str:
+        """Calls Groq API.
+        
+        Args:
+            prompt: Input prompt
+            
+        Returns:
+            API response
+        """
+        
         api_key = self.config["GROQ_API_KEY"]
         client = Groq(api_key=api_key)
         
@@ -135,7 +199,15 @@ user {input_text} """
 
     @spinner(spinner_type="random", message=" [magenta]Waiting for API response...")
     def _call_fireworks(self, prompt: str) -> str:
-        """Handle API calls for Fireworks AI provider"""
+        """Handle API calls for Fireworks AI provider
+        
+        Args:
+            prompt: Input prompt
+            
+        Returns:
+            API response
+        """
+        
         api_key = self.config["FIREWORKS_API_KEY"]
         client = OpenAI(
             api_key=api_key,
@@ -150,7 +222,15 @@ user {input_text} """
 
     @spinner(spinner_type="random", message=" [magenta]Waiting for API response...")
     def _call_openrouter(self, prompt: str) -> str:
-        """Handle API calls for OpenRouter provider"""
+        """Handle API calls for OpenRouter provider
+        
+        Args:
+            prompt: Input prompt
+            
+        Returns:
+            API response
+        """
+
         api_key = self.config["OPENROUTER_API_KEY"]
         client = OpenAI(
             base_url="https://openrouter.ai/api/v1",
@@ -169,7 +249,15 @@ user {input_text} """
 
     @spinner(spinner_type="random", message=" [magenta]Waiting for API response...")
     def _call_deepseek(self, prompt: str) -> str:
-        """Handle API calls for DeepSeek provider"""
+        """Handle API calls for DeepSeek provider
+        
+        Args:
+            prompt: Input prompt
+            
+        Returns:
+            API response
+        """
+
         api_key = self.config["DEEPSEEK_API_KEY"]
         client = OpenAI(
             api_key=api_key,
