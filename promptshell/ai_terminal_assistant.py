@@ -272,15 +272,15 @@ class AITerminalAssistant:
             choice = questionary.confirm(f"Do you want to run the command '{command}'?").ask()
             if choice:
                 if command.startswith("CONFIRM:"):
-                    confirmation = questionary.confirm(f"Warning: This command may be destructive. Are you sure you want to run '{command[8:]}'?").ask()
+                    confirmation = questionary.confirm(f"Warning: This command may be destructive. Are you sure you want to run '{command[9:]}'?").ask()
                     if not confirmation:
                         return format_text('red') + "Command execution aborted." + reset_format()
                     
                     # Add second-layer verification for dangerous commands
-                    if not self.verify_dangerous_command(command[8:]):
+                    if not self.verify_dangerous_command(command[9:]):
                         return format_text('red') + "Command verification failed. Execution aborted." + reset_format()
                     
-                    command = command[8:]
+                    command = command[9:]
                 formatted_command = format_text('cyan') + f"Command: {command}" + reset_format()
                 print(formatted_command)
                 self.command_history.append(command)
