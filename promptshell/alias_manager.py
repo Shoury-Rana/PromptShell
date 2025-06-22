@@ -196,7 +196,7 @@ class AliasManager:
         return input_command
     
     def clear_all_alias(self):
-        confirm = questionary.confirm("Are you sure you want to remove all aliases? (y/n)").ask()
+        confirm = questionary.confirm("Are you sure you want to remove all aliases? (yes/no)").ask()
         
         if not confirm:
             return False, "Alias clear operation cancelled."
