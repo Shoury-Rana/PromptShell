@@ -16,6 +16,27 @@ class TestAliasManager:
         assert aliases["ll"]["command"] == "ls -l"
         assert aliases["ll"]["description"] == "list long"
 
+    def test_add_without_description(self):
+        manager = AliasManager()
+        success, msg = manager.add_alias("hello", "echo Hello")
+        assert success
+        assert msg == "Alias 'hello' added"
+
+        aliases = manager.list_aliases()
+        assert "hello" in aliases
+        assert aliases["hello"]["command"] == "echo Hello"
+        assert aliases["hello"]["description"] == ""
+
+    def test_list_with_name(self):
+        manager = AliasManager()
+        success, msg = manager.add_alias("hello", "echo Hello")
+        assert success
+        assert msg == "Alias 'hello' added"
+
+        aliases = manager.list_aliases('hello')
+        assert aliases["command"] == "echo Hello"
+        assert aliases["description"] == ""
+
     def test_remove_alias(self):
         manager = AliasManager()
         manager.add_alias("ll", "ls -l")
@@ -62,7 +83,7 @@ class TestAliasManager:
     def test_save_and_load_aliases(self, mock_config_dir):
         # First session: add and save
         manager1 = AliasManager()
-        manager1.add_alias("gco", "git checkout")
+        manager1.add_alias("gco", "git checkout", "changes git branch")
         manager1.save_aliases()
 
         # Check if the file was actually written
@@ -75,6 +96,7 @@ class TestAliasManager:
         manager2 = AliasManager()
         assert "gco" in manager2.list_aliases()
         assert manager2.list_aliases("gco")["command"] == "git checkout"
+        assert manager2.list_aliases('gco')["description"] == "changes git branch"
 
 def test_handle_alias_command_add(mocker):
     # Mock the AliasManager instance that the handler function will use
