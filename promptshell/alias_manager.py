@@ -1,6 +1,7 @@
 import json
 import os
 import re
+import questionary
 from datetime import datetime
 from .setup import CONFIG_DIR
 import shlex
@@ -193,6 +194,25 @@ class AliasManager:
             base_command = self.aliases[alias_name]['command']
             return f"{base_command} {args}".strip()
         return input_command
+    
+    def clear_all_alias(self):
+        confirm = questionary.confirm("Are you sure you want to remove all aliases?").ask()
+        
+        if not confirm:
+            return False, "Alias clear operation cancelled."
+        
+        self.aliases = {}
+        
+        # file existence check
+        if not os.path.exists(ALIAS_FILE):
+            return False, "Alias file not found."
+        
+        with open(ALIAS_FILE, 'w') as f:
+            json.dump({'aliases': self.aliases}, f, indent=2)
+        
+        return True,"All aliases cleared."
+        
+        
 
 def handle_alias_command(command: str, alias_manager: AliasManager) -> str:
     """Processes alias management commands.
@@ -221,6 +241,9 @@ def handle_alias_command(command: str, alias_manager: AliasManager) -> str:
         elif subcommand == "remove" and len(parts) >= 3:
             _, message = alias_manager.remove_alias(parts[2])
             return message
+        elif subcommand == "clear":
+            _,message=alias_manager.clear_all_alias()
+            return message
         
         elif subcommand == "list":
             if len(parts) >= 3:
@@ -247,7 +270,8 @@ def handle_alias_command(command: str, alias_manager: AliasManager) -> str:
                 "  alias list [name] - List all aliases or show details\n"
                 "  alias import <file> - Import aliases from JSON file\n"
                 "  alias export <file> - Export aliases to JSON file\n"
-                "  alias help - Show this help"
+                "  alias help - Show this help\n"
+                "  alias clear - Clear all aliases"
             )
         
         return f"{format_text("red")}Invalid alias command: Use alias help for valid all commands{reset_format()}"
