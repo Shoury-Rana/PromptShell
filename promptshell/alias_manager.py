@@ -212,10 +212,21 @@ def handle_alias_command(command: str, alias_manager: AliasManager) -> str:
         
         subcommand = parts[1].lower()
         
-        if subcommand == "add" and len(parts) >= 4:
+        if subcommand == "add":
+            if len(parts) < 4:
+                raise ValueError("atleast 4 parts required.")
+    
             name = parts[2]
-            cmd = " ".join(parts[3:])
-            _, message = alias_manager.add_alias(name, cmd)
+
+            if command.strip().endswith(f'"{parts[-1]}"') or command.strip().endswith(f"'{parts[-1]}'"):
+                description = parts[-1]
+                cmd_parts = parts[3:-1]
+            else:
+                description = ''
+                cmd_parts = parts[3:]
+
+            cmd = ' '.join(cmd_parts)
+            _, message = alias_manager.add_alias(name, cmd, description)
             return message
         
         elif subcommand == "remove" and len(parts) >= 3:
@@ -229,7 +240,7 @@ def handle_alias_command(command: str, alias_manager: AliasManager) -> str:
                     return f"{parts[2]}: {alias['command']}\nDescription: {alias.get('description', '')}"
                 return f"{format_text("red")}Invalid alias name: Alias not found{reset_format()}"
             aliases = alias_manager.list_aliases()
-            return "\n".join([f"{name}: {data['command']}" for name, data in aliases.items()])
+            return "\n".join([f"{name}: {data['command']} ,Description: {data['description'] if data['description'] else '-'}" for name, data in aliases.items()])
         
         elif subcommand == "import" and len(parts) >= 3:
             _, message = alias_manager.import_aliases(parts[2])

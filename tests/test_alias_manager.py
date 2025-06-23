@@ -31,19 +31,19 @@ class TestAliasManager:
         
         success, msg = manager.add_alias("ll", "ls -la")
         assert not success
-        assert msg == "Alias already exists"
+        assert "Alias already exists" in msg 
 
     def test_add_alias_fails_on_dangerous_command(self):
         manager = AliasManager()
         success, msg = manager.add_alias("boom", "rm -rf /")
         assert not success
-        assert msg == "Command contains dangerous patterns"
+        assert "Invalid Command: Contains dangerous patterns" in msg
 
     def test_remove_alias_fails_if_not_found(self):
         manager = AliasManager()
         success, msg = manager.remove_alias("nonexistent")
         assert not success
-        assert msg == "Alias not found"
+        assert "Alias not found" in msg
 
     def test_expand_alias(self):
         manager = AliasManager()
@@ -86,7 +86,7 @@ def test_handle_alias_command_add(mocker):
     handle_alias_command(command_str, mock_manager)
     
     # Assert that the correct method was called on our mock manager
-    mock_manager.add_alias.assert_called_once_with("ll", "ls -l")
+    mock_manager.add_alias.assert_called_once_with("ll", "ls -l", '')
 
 def test_handle_alias_command_help(mocker):
     mock_manager = mocker.MagicMock(spec=AliasManager)
