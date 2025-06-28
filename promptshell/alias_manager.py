@@ -235,23 +235,20 @@ def handle_alias_command(command: str, alias_manager: AliasManager) -> str:
         if subcommand == "add":
             if len(parts) < 4:
                 raise ValueError("atleast 4 parts required.")
-    
             name = parts[2]
-
-            if command.strip().endswith(f'"{parts[-1]}"') or command.strip().endswith(f"'{parts[-1]}'"):
-                description = parts[-1]
-                cmd_parts = parts[3:-1]
-            else:
-                description = ''
-                cmd_parts = parts[3:]
-
-            cmd = ' '.join(cmd_parts)
-            _, message = alias_manager.add_alias(name, cmd, description)
-            return message
+            cmd = parts[3]
+            if len(parts) == 4:
+                _, message = alias_manager.add_alias(name, cmd)
+                return message
+            elif parts[4] == "--desc":
+                desc = parts[5] if len(parts)>5 else "" 
+                _, message = alias_manager.add_alias(name, cmd, desc)
+                return message
         
         elif subcommand == "remove" and len(parts) >= 3:
             _, message = alias_manager.remove_alias(parts[2])
             return message
+        
         elif subcommand == "clear":
             _,message=alias_manager.clear_all_alias()
             return message
@@ -276,7 +273,7 @@ def handle_alias_command(command: str, alias_manager: AliasManager) -> str:
         elif subcommand == "help":
             return (
                 "Alias Management Commands:\n"
-                "  alias add <name> \"<command>\" - Add new alias\n"
+                "  alias add <name> \"<command>\" --desc \"<description>\"- Add new alias\n"
                 "  alias remove <name> - Remove alias\n"
                 "  alias list [name] - List all aliases or show details\n"
                 "  alias import <file> - Import aliases from JSON file\n"

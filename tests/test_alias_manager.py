@@ -103,12 +103,12 @@ def test_handle_alias_command_add(mocker):
     mock_manager = mocker.MagicMock(spec=AliasManager)
     
     # Simulate the shlex.split output for "alias add ll 'ls -l'"
-    command_str = "alias add ll ls -l"
+    command_str = 'alias add ll "ls -l" --desc "show list"'
     
     handle_alias_command(command_str, mock_manager)
     
     # Assert that the correct method was called on our mock manager
-    mock_manager.add_alias.assert_called_once_with("ll", "ls -l", '')
+    mock_manager.add_alias.assert_called_once_with("ll", "ls -l", "show list")
 
 def test_handle_alias_command_help(mocker):
     mock_manager = mocker.MagicMock(spec=AliasManager)
