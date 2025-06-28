@@ -252,7 +252,8 @@ class AITerminalAssistant:
                     os.system('clear')
                 return ""
             if user_input.startswith('!'):
-                expanded = self.alias_manager.expand_alias(user_input[1:])
+                user_input = "!cd .." if user_input[1:].strip() == "cd.." else user_input # generally cd.. works but 'cd ..' is the right syntax
+                expanded = self.alias_manager.expand_alias(user_input[1:].strip())
                 if expanded != user_input[1:]:
                     print(f"Expanded to: {expanded}")
                 return self.run_direct_command(expanded)

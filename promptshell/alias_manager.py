@@ -75,13 +75,13 @@ class AliasManager:
         """
 
         if not self.validate_alias_name(name):
-            return False, f"{format_text("red")}Invalid alias name: Name must be alphanumeric with underscores{reset_format()}"
+            return False, f"{format_text('red')}Invalid alias name: Name must be alphanumeric with underscores{reset_format()}"
         
         if not self.validate_command(command):
-            return False, f"{format_text("red", bold=True)}Invalid Command: Contains dangerous patterns{reset_format()}"
+            return False, f"{format_text('red', bold=True)}Invalid Command: Contains dangerous patterns{reset_format()}"
         
         if name in self.aliases:
-            return False, f"{format_text("red")}Duplicate alias name: Alias already exists{reset_format()}"
+            return False, f"{format_text('red')}Duplicate alias name: Alias already exists{reset_format()}"
         
         self.aliases[name] = {
             'command': command,
@@ -103,7 +103,7 @@ class AliasManager:
         """
 
         if name not in self.aliases:
-            return False, f"{format_text("red")}Alias not found{reset_format()}"
+            return False, f"{format_text('red')}Alias not found{reset_format()}"
         
         del self.aliases[name]
         self.save_aliases()
@@ -139,7 +139,7 @@ class AliasManager:
         path_obj = Path(file_path)
 
         if not path_obj.exists() or not path_obj.is_file():
-            return False, f"{format_text("red")}Import error: File '{file_path}' not found.{reset_format()}"
+            return False, f"{format_text('red')}Import error: File '{file_path}' not found.{reset_format()}"
 
         try:
             with open(path_obj, 'r') as f:
@@ -150,9 +150,9 @@ class AliasManager:
             self.save_aliases()
             return True, "Aliases imported successfully"
         except json.JSONDecodeError:
-            return False, f"{format_text("red")}Invalid JSON: Incorrect JSON format in alias file{reset_format()}."
+            return False, f"{format_text('red')}Invalid JSON: Incorrect JSON format in alias file{reset_format()}."
         except Exception as e:
-            return False, f"{format_text("red")}Import error: Failed to import aliases: {str(e)}{reset_format()}"
+            return False, f"{format_text('red')}Import error: Failed to import aliases: {str(e)}{reset_format()}"
 
     
     
@@ -171,7 +171,7 @@ class AliasManager:
                 json.dump({'aliases': self.aliases}, f, indent=2)
             return True, "Aliases exported successfully"
         except Exception as e:
-            return False, f"{format_text("red")}Export failed: {str(e)}{reset_format()}"
+            return False, f"{format_text('red')}Export failed: {str(e)}{reset_format()}"
     
     def expand_alias(self, input_command):
         """Expands aliases in commands.
@@ -228,7 +228,7 @@ def handle_alias_command(command: str, alias_manager: AliasManager) -> str:
     try:
         parts = shlex.split(command)
         if len(parts) < 2:
-            return f"{format_text("white", bold=True)}Usage: alias [add|remove|list|import|export|help]{reset_format()}"
+            return f"{format_text('white', bold=True)}Usage: alias [add|remove|list|import|export|help]{reset_format()}"
         
         subcommand = parts[1].lower()
         
@@ -261,7 +261,7 @@ def handle_alias_command(command: str, alias_manager: AliasManager) -> str:
                 alias = alias_manager.list_aliases(parts[2])
                 if alias:
                     return f"{parts[2]}: {alias['command']}\nDescription: {alias.get('description', '')}"
-                return f"{format_text("red")}Invalid alias name: Alias not found{reset_format()}"
+                return f"{format_text('red')}Invalid alias name: Alias not found{reset_format()}"
             aliases = alias_manager.list_aliases()
             return "\n".join([f"{name}: {data['command']} ,Description: {data['description'] if data['description'] else '-'}" for name, data in aliases.items()])
         
@@ -285,6 +285,6 @@ def handle_alias_command(command: str, alias_manager: AliasManager) -> str:
                 "  alias clear - Clear all aliases"
             )
         
-        return f"{format_text("red")}Invalid alias command: Use alias help for valid all commands{reset_format()}"
+        return f"{format_text('red')}Invalid alias command: Use alias help for valid all commands{reset_format()}"
     except Exception as e:
-        return f"{format_text("red")}Error processing alias command: {str(e)}{reset_format()}"
+        return f"{format_text('red')}Error processing alias command: {str(e)}{reset_format()}"
