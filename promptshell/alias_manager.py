@@ -232,15 +232,23 @@ def handle_alias_command(command: str, alias_manager: AliasManager) -> str:
         
         subcommand = parts[1].lower()
         
-        if subcommand == "add" and len(parts) >= 4:
+        if subcommand == "add":
+            if len(parts) < 4:
+                raise ValueError("atleast 4 parts required.")
             name = parts[2]
-            cmd = " ".join(parts[3:])
-            _, message = alias_manager.add_alias(name, cmd)
-            return message
+            cmd = parts[3]
+            if len(parts) == 4:
+                _, message = alias_manager.add_alias(name, cmd)
+                return message
+            elif parts[4] == "--desc":
+                desc = parts[5] if len(parts)>5 else "" 
+                _, message = alias_manager.add_alias(name, cmd, desc)
+                return message
         
         elif subcommand == "remove" and len(parts) >= 3:
             _, message = alias_manager.remove_alias(parts[2])
             return message
+        
         elif subcommand == "clear":
             _,message=alias_manager.clear_all_alias()
             return message
@@ -252,7 +260,7 @@ def handle_alias_command(command: str, alias_manager: AliasManager) -> str:
                     return f"{parts[2]}: {alias['command']}\nDescription: {alias.get('description', '')}"
                 return f"{format_text('red')}Invalid alias name: Alias not found{reset_format()}"
             aliases = alias_manager.list_aliases()
-            return "\n".join([f"{name}: {data['command']}" for name, data in aliases.items()])
+            return "\n".join([f"{name}: {data['command']} ,Description: {data['description'] if data['description'] else '-'}" for name, data in aliases.items()])
         
         elif subcommand == "import" and len(parts) >= 3:
             _, message = alias_manager.import_aliases(parts[2])
@@ -265,7 +273,7 @@ def handle_alias_command(command: str, alias_manager: AliasManager) -> str:
         elif subcommand == "help":
             return (
                 "Alias Management Commands:\n"
-                "  alias add <name> \"<command>\" - Add new alias\n"
+                "  alias add <name> \"<command>\" --desc \"<description>\"- Add new alias\n"
                 "  alias remove <name> - Remove alias\n"
                 "  alias list [name] - List all aliases or show details\n"
                 "  alias import <file> - Import aliases from JSON file\n"
