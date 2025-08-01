@@ -4,7 +4,7 @@ import platform
 import os
 import sys
 from .ansi_support import enable_ansi_support
-from .format_utils import format_text, reset_format, get_terminal_size
+from .format_utils import text_theme, reset_format, get_terminal_size
 from .setup import setup_wizard, load_config, get_active_model
 from .alias_manager import handle_alias_command
 from .version import get_version
@@ -30,21 +30,21 @@ def main():
 
     assistant = AITerminalAssistant(config=config, model_name=model_name)
 
-    print(f"""\n{format_text('green', bold=True)}Welcome to the AI-Powered Terminal Assistant!
+    print(f"""\n{text_theme('prompt', bold=True)}Welcome to the AI-Powered Terminal Assistant!
 Active provider: ({model_name} - {platform.system()})
 Type '--help' for assistance and '--config' for settings.{reset_format()}""")
     
     while True:
         try:
             columns, _ = get_terminal_size()
-            prompt = f"\n{format_text('green', bold=True)}{os.getcwd()}$ {reset_format()}"
+            prompt = f"\n{text_theme('info', bold=True)}{os.getcwd()}$ {reset_format()}"
             user_input = input(prompt)
 
             if len(prompt) + len(user_input) > columns:
                 print()  # Move to the next line if input is too long
 
             if user_input.lower() in  ('quit', 'exit'):
-                print(format_text('red', bold=True) + "\nTerminating..." + reset_format())
+                print(text_theme('info', bold=True) + "\nTerminating..." + reset_format())
                 break
 
             if user_input.lower() == "--config":
@@ -52,7 +52,7 @@ Type '--help' for assistance and '--config' for settings.{reset_format()}""")
                 config = load_config()
                 model_name = get_active_model()
                 assistant = AITerminalAssistant(config=config, model_name=model_name)
-                print(f"{format_text('yellow', bold=True)}Configuration updated!{reset_format()}")
+                print(f"{text_theme('info', bold=True)}Configuration updated!{reset_format()}")
                 continue
 
             if user_input.lower() == "--tutorial":
@@ -62,22 +62,22 @@ Type '--help' for assistance and '--config' for settings.{reset_format()}""")
             if user_input.lower() == "--help":
                 col_width = 18 
                 print(f"""
-{format_text('yellow', bold=True)}[Usage Patterns]{reset_format()}
-  {format_text('cyan')}Natural Language:{reset_format()}  show me all python files modified last week
-  {format_text('cyan')}Direct Execution:{reset_format()}  Use ! in input. eg., !ls -l
-  {format_text('cyan')}Ask a Question:{reset_format()}    Use ? in input. eg., what is the purpose of the chmod command?
+{text_theme('section_header', bold=True)}[Usage Patterns]{reset_format()}
+  {text_theme('info')}Natural Language:{reset_format()}  show me all python files modified last week
+  {text_theme('info')}Direct Execution:{reset_format()}  Use ! in input. eg., !ls -l
+  {text_theme('info')}Ask a Question:{reset_format()}    Use ? in input. eg., what is the purpose of the chmod command?
 
-{format_text('yellow', bold=True)}[Special Commands]{reset_format()}
-  {format_text('green')}{'--help':<{col_width}}{reset_format()}Show this help message
-  {format_text('green')}{'--tutorial':<{col_width}}{reset_format()}Start the interactive tutorial
-  {format_text('green')}{'--config':<{col_width}}{reset_format()}Re-run the setup wizard to change AI provider or model
-  {format_text('green')}{'alias':<{col_width}}{reset_format()}Manage command shortcuts (use 'alias help' for details)
-  {format_text('green')}{'clear / cls':<{col_width}}{reset_format()}Clear the terminal screen
-  {format_text('green')}{'exit / quit':<{col_width}}{reset_format()}Terminate the assistant
+{text_theme('section_header', bold=True)}[Special Commands]{reset_format()}
+  {text_theme('prompt')}{'--help':<{col_width}}{reset_format()}Show this help message
+  {text_theme('prompt')}{'--tutorial':<{col_width}}{reset_format()}Start the interactive tutorial
+  {text_theme('prompt')}{'--config':<{col_width}}{reset_format()}Re-run the setup wizard to change AI provider or model
+  {text_theme('prompt')}{'alias':<{col_width}}{reset_format()}Manage command shortcuts (use 'alias help' for details)
+  {text_theme('prompt')}{'clear / cls':<{col_width}}{reset_format()}Clear the terminal screen
+  {text_theme('prompt')}{'exit / quit':<{col_width}}{reset_format()}Terminate the assistant
 
-{format_text('yellow', bold=True)}[Tips]{reset_format()}
-  - Use {format_text('magenta')}Tab{reset_format()} for auto-completion of file and directory paths.
-  - Prefixing with {format_text('magenta')}!{reset_format()} bypasses the AI for raw speed and direct execution.
+{text_theme('section_header', bold=True)}[Tips]{reset_format()}
+  - Use {text_theme('tip')}Tab{reset_format()} for auto-completion of file and directory paths.
+  - Prefixing with {text_theme('tip')}!{reset_format()} bypasses the AI for raw speed and direct execution.
 """)
                 continue
 
@@ -90,7 +90,7 @@ Type '--help' for assistance and '--config' for settings.{reset_format()}""")
             print(result)
 
         except KeyboardInterrupt:
-            print(format_text('red', bold=True) + "\nTerminating..." + reset_format())
+            print(text_theme('info', bold=True) + "\nTerminating..." + reset_format())
             break
 
 if __name__ == "__main__":

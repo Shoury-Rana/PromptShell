@@ -1,13 +1,13 @@
 import pytest
-from promptshell.format_utils import format_text, reset_format, get_current_os
+from promptshell.format_utils import text_theme, reset_format, get_current_os
 
-def test_format_text():
+def test_text_theme():
     # Test foreground color
-    assert format_text('red') == "\033[0m\033[31m"
+    assert text_theme('error') == "\033[0m\033[31m"
     # Test bold style
-    assert format_text('green', bold=True) == "\033[0m\033[1m\033[32m"
+    assert text_theme('prompt', bold=True) == "\033[0m\033[1m\033[32m"
     # Test background color
-    assert format_text('blue', bg='white') == "\033[0m\033[34m\033[47m"
+    assert text_theme('blue', bg='white') == "\033[0m\033[34m\033[47m"
 
 def test_reset_format():
     assert reset_format() == "\033[0m"

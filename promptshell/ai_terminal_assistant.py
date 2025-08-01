@@ -8,7 +8,7 @@ import questionary
 from typing import Tuple
 from .node import Node
 from .data_gatherer import DataGatherer
-from .format_utils import format_text, reset_format, get_current_os, get_os_specific_examples
+from .format_utils import text_theme, reset_format, get_current_os, get_os_specific_examples
 from .system_info import get_system_info
 from .alias_manager import AliasManager
 
@@ -189,17 +189,17 @@ class AITerminalAssistant:
                 result = subprocess.run(command, shell=True, text=True, capture_output=True)
                 print(result.stdout)
                 if result.stderr:
-                    print(format_text('red') + "Error: " + result.stderr + reset_format())
+                    print(text_theme('error') + "Error: " + result.stderr + reset_format())
                 return result.stdout, result.stderr, result.returncode
             else:
                 args = shlex.split(command)
                 result = subprocess.run(args, text=True, capture_output=True)
                 print(result.stdout)
                 if result.stderr:
-                    print(format_text('red') + "Error: " + result.stderr + reset_format())
+                    print(text_theme('error') + "Error: " + result.stderr + reset_format())
                 return result.stdout, result.stderr, result.returncode
         except Exception as e:
-            print(format_text('red') + f"Execution error: {e}" + reset_format())
+            print(text_theme('error') + f"Execution error: {e}" + reset_format())
             return "", str(e), 1
 
     def execute_interactive_command(self, command: str) -> Tuple[str, str, int]:
@@ -212,7 +212,7 @@ class AITerminalAssistant:
             Tuple containing stdout, stderr, and exit code
         """
 
-        print(format_text('yellow') + "Executing interactive command..." + reset_format())
+        print(text_theme('info') + "Executing interactive command..." + reset_format())
         try:
             proc = subprocess.Popen(
                 shlex.split(command),
@@ -223,10 +223,10 @@ class AITerminalAssistant:
             )
             proc.communicate()
             if proc.returncode != 0:
-                print(format_text('red') + f"Command exited with code {proc.returncode}" + reset_format())
+                print(text_theme('success') + f"Command exited with code {proc.returncode}" + reset_format())
             return "", "", proc.returncode
         except Exception as e:
-            print(format_text('red') + f"Execution failed: {str(e)}" + reset_format())
+            print(text_theme('error') + f"Execution failed: {str(e)}" + reset_format())
             return "", str(e), 1
 
     def execute_command(self, user_input: str) -> str:
@@ -275,14 +275,14 @@ class AITerminalAssistant:
                 if command.startswith("CONFIRM:"):
                     confirmation = questionary.confirm(f"Warning: This command may be destructive. Are you sure you want to run '{command[9:]}'?").ask()
                     if not confirmation:
-                        return format_text('red') + "Command execution aborted." + reset_format()
+                        return text_theme('info') + "Command execution aborted." + reset_format()
                     
                     # Add second-layer verification for dangerous commands
                     if not self.verify_dangerous_command(command[9:]):
-                        return format_text('red') + "Command verification failed. Execution aborted." + reset_format()
+                        return text_theme('dangerous_confirm') + "Command verification failed. Execution aborted." + reset_format()
                     
                     command = command[9:]
-                formatted_command = format_text('cyan') + f"Command: {command}" + reset_format()
+                formatted_command = text_theme('info') + f"Command: {command}" + reset_format()
                 print(formatted_command)
                 self.command_history.append(command)
                 if len(self.command_history) > 10:
@@ -297,13 +297,13 @@ class AITerminalAssistant:
                     result = ""
                     if exit_code != 0:
                         debug_suggestion = self.debug_error(command, stderr, exit_code)
-                        result += format_text('yellow') + f"\n\nDebugging Suggestion:\n{debug_suggestion}" + reset_format()
+                        result += text_theme('tip') + f"\n\nDebugging Suggestion:\n{debug_suggestion}" + reset_format()
                 return result.strip()
             else:
-                print(format_text('red') + "Command cancelled!" + reset_format())
+                print(text_theme('info') + "Command cancelled!" + reset_format())
                 return ""
         except Exception as e:
-            print(format_text('red') + "Error in execute command" + reset_format())
+            print(text_theme('error') + "Error in execute command" + reset_format())
             return self.handle_error(str(e), user_input, command)
 
     def run_direct_command(self, command: str) -> str:
@@ -317,7 +317,7 @@ class AITerminalAssistant:
         """
 
         try:
-            formatted_command = format_text('cyan') + f"Direct Command: {command}" + reset_format()
+            formatted_command = text_theme('info') + f"Direct Command: {command}" + reset_format()
             print(formatted_command)
             self.command_history.append(command)
             if len(self.command_history) > 10:
@@ -337,7 +337,7 @@ class AITerminalAssistant:
                 result = ""
                 if exit_code != 0:
                     debug_suggestion = self.debug_error(command, stderr, exit_code)
-                    result += format_text('yellow') + f"\n\nDebugging Suggestion:\n{debug_suggestion}" + reset_format()
+                    result += text_theme('tip') + f"\n\nDebugging Suggestion:\n{debug_suggestion}" + reset_format()
                 return result.strip()
         except Exception as e:
             return self.handle_error(str(e), command, command)
@@ -363,7 +363,7 @@ class AITerminalAssistant:
         {context}
         Please provide a clear and concise answer to the question, taking into account the given context.
         """)
-        return format_text('cyan') + "Answer:\n" + answer + reset_format()
+        return text_theme('success') + "Answer:\n" + answer + reset_format()
 
     def gather_additional_data(self, user_input: str) -> dict:
         """Collects supplementary data based on user input.
@@ -438,14 +438,14 @@ class AITerminalAssistant:
         Current Directory: {self.current_directory}
         Provide ONLY a single, simple corrected command. No explanations.
         """)
-        error_msg = format_text('red') + f"Error occurred: {error}" + reset_format()
-        suggestion_msg = format_text('yellow') + f"Suggested command: {error_analysis}" + reset_format()
+        error_msg = text_theme('error') + f"Error occurred: {error}" + reset_format()
+        suggestion_msg = text_theme('tip') + f"Suggested command: {error_analysis}" + reset_format()
         print(error_msg)
         print(suggestion_msg)
         confirmation = questionary.confirm("Would you like to execute the suggested command?").ask()
         if confirmation:
             return self.execute_command(error_analysis)
-        return format_text('red') + "Command execution aborted." + reset_format()
+        return text_theme('info') + "Command execution aborted." + reset_format()
 
     def verify_dangerous_command(self, command: str) -> bool:
         """Verify dangerous command by asking user to re-type it.
@@ -456,6 +456,6 @@ class AITerminalAssistant:
         Returns:
             bool: True if verification successful, False otherwise
         """
-        print(format_text('yellow') + "\nFor safety, please re-type or paste the exact command to proceed:" + reset_format())
+        print(text_theme('warning', bold=True) + "\nFor safety, please re-type or paste the exact command to proceed:" + reset_format())
         user_input = input("> ").strip()
         return user_input == command

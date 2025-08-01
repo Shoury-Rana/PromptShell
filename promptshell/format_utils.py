@@ -1,5 +1,14 @@
 import os
 import platform
+import json
+from pathlib import Path
+
+dir = Path(__file__).parent
+themes_path = dir / 'themes.json'
+
+with open(themes_path, 'r') as f:
+    themes = json.load(f)
+    theme = themes['default'] # Change 'default' for other themes
 
 def format_text(fg, bg=None, inverted=False, bold=False):
     """Formats text with ANSI escape sequences.
@@ -93,3 +102,19 @@ def get_os_specific_examples():
         ]
     }
     return examples[current_os]
+
+def text_theme(theme_key, bold = False, bg = None, inverted = False):
+    """
+    Formats text using a predefined color from themes.json.
+    
+    Args:
+        theme_key: The key for the color in the THEME dictionary (e.g., 'error', 'success').
+        bold: Bold text flag (default: False).
+        bg: Background color name (optional).
+        inverted: Invert colors flag (default: False).
+        
+    Returns:
+        ANSI formatted string.
+    """
+    color = theme.get(theme_key, 'white')
+    return format_text(color, bg=bg, inverted=inverted, bold=bold)
