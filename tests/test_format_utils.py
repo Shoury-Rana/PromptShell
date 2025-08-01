@@ -7,7 +7,7 @@ def test_text_theme():
     # Test bold style
     assert text_theme('prompt', bold=True) == "\033[0m\033[1m\033[32m"
     # Test background color
-    assert text_theme('blue', bg='white') == "\033[0m\033[34m\033[47m"
+    assert text_theme('info', bg='white') == "\033[0m\033[36m\033[47m"
 
 def test_reset_format():
     assert reset_format() == "\033[0m"
