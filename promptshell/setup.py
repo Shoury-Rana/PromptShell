@@ -1,6 +1,7 @@
 import questionary
 import requests
 import os
+
 from .format_utils import text_theme, reset_format
 
 # Determine the configuration directory based on the operating system

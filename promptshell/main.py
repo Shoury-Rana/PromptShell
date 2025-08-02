@@ -1,9 +1,10 @@
-from .ai_terminal_assistant import AITerminalAssistant
-from .readline_setup import setup_readline
 import platform
 import os
 import sys
+
+from .readline_setup import setup_readline
 from .ansi_support import enable_ansi_support
+from .ai_terminal_assistant import AITerminalAssistant
 from .format_utils import text_theme, reset_format, get_terminal_size
 from .setup import setup_wizard, load_config, get_active_model
 from .alias_manager import handle_alias_command

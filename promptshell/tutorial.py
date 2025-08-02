@@ -1,8 +1,10 @@
 import os
 import sys
-from typing import Dict, List, Optional, Callable
 import questionary
 import time
+
+from typing import Dict, List, Optional, Callable
+
 from .format_utils import text_theme, reset_format
 from .setup import CONFIG_DIR
 

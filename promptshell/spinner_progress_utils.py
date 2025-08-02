@@ -49,11 +49,13 @@ Another test example is shown in main funtion below
 
 """
 
+import random
+
+from functools import wraps
+
 from rich.console import Console
 from rich.progress import Progress
 from rich.spinner import SPINNERS
-from functools import wraps
-import random
 
 
 #--------SPINNER-------

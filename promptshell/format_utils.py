@@ -1,6 +1,7 @@
 import os
 import platform
 import json
+
 from pathlib import Path
 
 dir = Path(__file__).parent

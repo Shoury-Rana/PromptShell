@@ -1,4 +1,5 @@
 import pytest
+
 from promptshell.format_utils import text_theme, reset_format, get_current_os
 
 def test_text_theme():

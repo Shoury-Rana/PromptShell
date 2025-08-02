@@ -2,10 +2,12 @@ import json
 import os
 import re
 import questionary
-from datetime import datetime
-from .setup import CONFIG_DIR
 import shlex
+
+from datetime import datetime
 from pathlib import Path
+
+from .setup import CONFIG_DIR
 from .format_utils import text_theme, reset_format
 
 ALIAS_FILE = os.path.join(CONFIG_DIR, "aliases.json")

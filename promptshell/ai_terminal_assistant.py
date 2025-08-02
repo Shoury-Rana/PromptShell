@@ -5,7 +5,9 @@ import getpass
 import sys
 import platform
 import questionary
+
 from typing import Tuple
+
 from .node import Node
 from .data_gatherer import DataGatherer
 from .format_utils import text_theme, reset_format, get_current_os, get_os_specific_examples
