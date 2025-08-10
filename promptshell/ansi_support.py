@@ -2,7 +2,7 @@ import platform
 
 if platform.system().lower() == "windows":
     from ctypes import windll, byref
-    from ctypes.wintypes import DWORD, HANDLE
+    from ctypes.wintypes import DWORD
 
     def enable_ansi_support():
         """Enable ANSI escape sequences on Windows"""

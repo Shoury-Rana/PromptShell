@@ -1,7 +1,8 @@
 import questionary
 import requests
 import os
-from .format_utils import format_text, reset_format
+
+from .format_utils import text_theme, reset_format
 
 # Determine the configuration directory based on the operating system
 if os.name == 'nt':  # Windows
@@ -30,7 +31,7 @@ def setup_wizard():
         ]
     ).ask()
     if not operation_mode:
-        print(format_text("yellow") + "⚠️ Operation mode selection cancelled. Exiting setup." + reset_format())
+        print(text_theme('warning') + "⚠️ Operation mode selection cancelled. Exiting setup." + reset_format())
         return
     operation_mode = operation_mode.split()[0]  # Extract "local" or "api"
 
@@ -61,7 +62,7 @@ def setup_wizard():
                 model for model in models
             ]
         except requests.exceptions.RequestException as e:
-            print(format_text("yellow") + f"⚠️ Could not connect to Ollama: {e}" + reset_format())
+            print(text_theme('error') + f"⚠️ Could not connect to Ollama: {e}" + reset_format())
         return []
     
     installed_models = get_installed_models()
@@ -69,7 +70,7 @@ def setup_wizard():
     # If Local mode is selected, choose a model
     if operation_mode == "local":
         if not installed_models:
-            print(format_text("yellow", bold=True) + "⚠️ No models found on the local Ollama server. Please install models and try again." + reset_format())
+            print(text_theme('error', bold=True) + "⚠️ No models found on the local Ollama server. Please install models and try again." + reset_format())
             return
         local_model = questionary.select(
             "Choose local model:",
@@ -78,7 +79,7 @@ def setup_wizard():
             ]
         ).ask()
         if not local_model:
-            print(format_text("yellow") + "⚠️ Local model selection cancelled. Exiting setup." + reset_format())
+            print(text_theme('warning') + "⚠️ Local model selection cancelled. Exiting setup." + reset_format())
             return
         local_model = local_model.split()[0]  # Extract model name
 
@@ -99,7 +100,7 @@ def setup_wizard():
             choices=list(api_key_dict.keys())
         ).ask()
         if not api_provider:
-            print(format_text("yellow") + "⚠️ API provider selection cancelled. Exiting setup." + reset_format())
+            print(text_theme('warning') + "⚠️ API provider selection cancelled. Exiting setup." + reset_format())
             return
 
         # Get available models for the selected provider
@@ -115,7 +116,7 @@ def setup_wizard():
             default=default_model
         ).ask()
         if not api_model:
-            print(format_text("yellow") + "⚠️ API model selection cancelled. Exiting setup." + reset_format())
+            print(text_theme('warning') + "⚠️ API model selection cancelled. Exiting setup." + reset_format())
             return
         
         # Handle custom model input
@@ -125,7 +126,7 @@ def setup_wizard():
                 default=default_model
             ).ask()
             if not api_model:
-                print(format_text("yellow") + "⚠️ Custom model input cancelled. Exiting setup." + reset_format())
+                print(text_theme('warning') + "⚠️ Custom model input cancelled. Exiting setup." + reset_format())
                 return
 
         provider_key_name = f"{api_provider.upper()}_API_KEY"
@@ -134,7 +135,7 @@ def setup_wizard():
                 f"API key for {api_provider} already exists. Do you want to use it?"
             ).ask()
             if existing_api is None:
-                print(format_text("yellow") + "⚠️ API key confirmation cancelled. Exiting setup." + reset_format())
+                print(text_theme('warning') + "⚠️ API key confirmation cancelled. Exiting setup." + reset_format())
                 return
             if not existing_api:
                 # Ask for API key securely if the user chooses not to reuse the existing key
@@ -142,7 +143,7 @@ def setup_wizard():
                     f"Enter API key for {api_provider}:"
                 ).ask()
                 if not api_key_dict[api_provider]:
-                    print(format_text("yellow") + "⚠️ API key input cancelled. Exiting setup." + reset_format())
+                    print(text_theme('warning') + "⚠️ API key input cancelled. Exiting setup." + reset_format())
                     return
             else:
                 # Use the existing API key
@@ -153,7 +154,7 @@ def setup_wizard():
                 f"Enter API key for {api_provider}:"
             ).ask()
             if not api_key_dict[api_provider]:
-                print(format_text("yellow") + "⚠️ API key input cancelled. Exiting setup." + reset_format())
+                print(text_theme('warning') + "⚠️ API key input cancelled. Exiting setup." + reset_format())
                 return
 
     # Merge new configuration with existing configuration
@@ -191,8 +192,8 @@ DEEPSEEK_API_KEY={config.get("DEEPSEEK_API_KEY", "")}
     with open(CONFIG_FILE, "w") as file:
         file.write(config_content)
 
-    print(format_text("green", bg="black") + f"\n✅ Configuration updated! Saved to {CONFIG_FILE}" + reset_format())
-    print(format_text("blue") + f"Active model: {get_active_model()}" + reset_format())
+    print(text_theme("success", bg="black") + f"\n✅ Configuration updated! Saved to {CONFIG_FILE}" + reset_format())
+    print(text_theme("info") + f"Active model: {get_active_model()}" + reset_format())
 
 def load_config():
     """
@@ -218,7 +219,7 @@ def load_config():
 
     if not os.path.exists(CONFIG_FILE):
         if not warning_printed:
-            print(format_text("yellow") + f"⚠️ Config file '{CONFIG_FILE}' not found. Using default settings." + reset_format())
+            print(text_theme('error') + f"⚠️ Config file '{CONFIG_FILE}' not found. Using default settings." + reset_format())
             warning_printed = True  
         return config
 

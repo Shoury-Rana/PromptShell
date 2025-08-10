@@ -1,9 +1,10 @@
 import sys
 import unittest
+import subprocess
+
 from unittest.mock import patch, MagicMock
 from io import StringIO
 from promptshell.main import main
-import subprocess
 from promptshell.version import get_version
 
 class TestVersionFlag(unittest.TestCase):
