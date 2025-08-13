@@ -1,6 +1,7 @@
 import sys
 import glob
 import os
+import atexit
 
 def setup_readline():
     """Configures tab completion and history support."""
@@ -25,6 +26,20 @@ def setup_readline():
                 except ImportError:
                     print("Warning: No readline or pyreadline3 found. Tab completion will not work.")
                     return
+
+    if os.name == 'nt':
+        history_file = os.path.join(os.getenv('APPDATA'), 'PromptShell', 'history.log')
+    else:
+        history_file = os.path.join(os.path.expanduser('~'), '.config', 'PromptShell', 'history.log')
+
+    try:
+        readline.read_history_file(history_file)
+        readline.set_history_length(1000) # Optional: limit history size
+    except FileNotFoundError:
+        pass
+    
+    atexit.register(readline.write_history_file, history_file)
+
 
     # Configure readline for tab completion
     readline.parse_and_bind("tab: complete")
